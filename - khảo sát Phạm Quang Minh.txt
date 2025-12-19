@@ -1,0 +1,17 @@
+- khảo sát: Phạm Quang Minh
+- phân tích và thiết kế hệ thống: 
+csdl:
+	sanpham (masp, tensp, soluong, hsd(cùng 1 lô) , mancc, mã danh mục, mã don nhập hang, ghi chú) 
+
+		danhmucsanpham (ma danh muc, ten danh muc, mo tả)
+		nhacungcap (manhacungcap, ten nha cung cap)
+		donnhaphang (ma don nhập hang, ngay nhap hang)
+	
+	taikhoan (ma nhan vien, mat khau, chức vụ, ten nhan vien, ngay sinh, que quan, sdt, gioi tính, ma bo phan)
+		bophan(ma bo phan, ten bo phan) 	
+
+	hoadon(ma hoa don, ngay in hoa don)
+		chi tiet hoa don(ma chi tiet hoa don, ma hoa don, ma san pham)
+	
+	
+
