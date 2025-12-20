@@ -1,0 +1,95 @@
+create TABLE donnhaphang
+(
+    madonnhaphang int AUTO_INCREMENT PRIMARY KEY,
+    ngaynhaphang date
+);
+create TABLE danhmucsanpham
+(
+    madanhmuc int AUTO_INCREMENT PRIMARY KEY,
+    tendanhmuc varchar(100) not null,
+    mota text
+);
+CREATE TABLE nhacungcap
+(
+    manhacungcap int AUTO_INCREMENT PRIMARY KEY,
+    tennhacungcap varchar(100) not null
+);
+CREATE TABLE sanpham
+(
+    masanpham int AUTO_INCREMENT PRIMARY KEY,
+    tensanpham varchar(100) not null,
+    soluong int not null,
+    hansudung date not null,
+    manhacungcap int not null,
+    madanhmuc int not null,
+    madonnhaphang int not null,
+    ghichu text,
+    FOREIGN KEY (manhacungcap) REFERENCES nhacungcap(manhacungcap),
+    FOREIGN KEY (madanhmuc) REFERENCES danhmucsanpham(madanhmuc),
+    FOREIGN KEY (madonnhaphang) REFERENCES donnhaphang(madonnhaphang)
+);
+create table bophan (
+	mabophan int auto_increment primary key,
+	tenbophan varchar(200) not null
+);
+CREATE TABLE taikhoan (
+    manhanvien VARCHAR(20) PRIMARY KEY,
+    matkhau VARCHAR(100) NOT NULL,
+    chucvu VARCHAR(100) NOT NULL,
+    tennhanvien VARCHAR(100) NOT NULL,
+    ngaysinh DATE,
+    sdt VARCHAR(10),
+    gioitinh ENUM('nam','nữ') NOT NULL,
+    quequan VARCHAR(100) NOT NULL,
+    mabophan INT,
+    FOREIGN KEY (mabophan) REFERENCES bophan(mabophan)
+);
+create table hoadon (
+	mahoadon int auto_increment primary key,
+	ngayxuat date not null
+);
+create table chitiethoadon (
+	machitiethoadon int auto_increment primary key,
+	mahoadon int,
+	foreign key (mahoadon) references hoadon(mahoadon),
+	masanpham int,
+	foreign key (masanpham) references sanpham(masanpham)
+);
+
+
+INSERT INTO donnhaphang (ngaynhaphang) VALUES
+('2024-10-01'),
+('2024-10-05'),
+('2024-10-10');
+INSERT INTO danhmucsanpham (tendanhmuc, mota) VALUES
+('Đồ uống', 'Nước giải khát các loại'),
+('Thực phẩm', 'Thực phẩm tiêu dùng hằng ngày'),
+('Gia dụng', 'Đồ dùng gia đình');
+INSERT INTO nhacungcap (tennhacungcap) VALUES
+('Công ty Thực phẩm ABC'),
+('Nhà phân phối XYZ'),
+('Công ty Gia dụng Việt');
+INSERT INTO sanpham
+(tensanpham, soluong, hansudung, manhacungcap, madanhmuc, madonnhaphang, ghichu)
+VALUES
+('Nước ngọt Coca', 100, '2025-06-01', 1, 1, 1, 'Lon 330ml'),
+('Mì tôm Hảo Hảo', 200, '2025-03-15', 2, 2, 2, 'Vị tôm chua cay'),
+('Bột giặt OMO', 50, '2026-01-01', 3, 3, 3, 'Gói 3kg');
+INSERT INTO bophan (tenbophan) VALUES
+('Thu ngân'),
+('Kho'),
+('Quản lý');
+INSERT INTO hoadon (ngayxuat) VALUES
+('2024-10-12'),
+('2024-10-13');
+INSERT INTO chitiethoadon (mahoadon, masanpham) VALUES
+(1, 1),
+(1, 2),
+(2, 3);
+INSERT INTO taikhoan
+(manhanvien, matkhau, chucvu, tennhanvien, ngaysinh, sdt, gioitinh, quequan, mabophan)
+VALUES
+('NV01', '123456', 'Admin', 'Nguyễn Văn A', '1990-01-01', '0901111111', 'nam', 'Hà Nội', 3),
+('NV02', '123456', 'Nhân viên', 'Trần Thị B', '1998-05-10', '0902222222', 'nữ', 'Hải Phòng', 1),
+('NV03', '123456', 'Nhân viên', 'Lê Văn C', '2000-08-20', '0903333333', 'nam', 'Đà Nẵng', 2);
+

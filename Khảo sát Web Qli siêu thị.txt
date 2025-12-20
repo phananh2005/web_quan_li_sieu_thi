@@ -1,0 +1,185 @@
+
+trang web quản lí siêu thị
+
+KHẢO SÁT
+
+loại siêu thị truyền thống, có gian hàng, đại lí
+
+
+Đối tượng Người dùng:
+	admin trang web
+			admin sẽ quản lí giao diện, data, chức năng, bảo mật trang web, fix lỗi phát sinh
+				data: 
+				
+	người quản lí, chủ siêu thị
+		quản lí chi tiêu: 
+			giá hàng nhập, giá hàng bán
+		quản lí sản phẩm: nguồn hàng, số lượng hàng tồn kho, số lượng hàng dự kiến sẽ nhập
+			cách trưng bày sản phẩm
+		quản lí nhân viên:
+			lương cho nhân viên, vị trí cho nhân viên
+		
+	
+	
+	nhân viên siêu thị
+		nhân viên khuân vác: 
+			chấm công
+		nhân viên thu ngân
+		
+1.2. Khảo sát thực tế hoạt động của siêu thị
+1.2.1. Quy trình nhập hàng
+
+Quy trình nhập hàng trong siêu thị thường được thực hiện theo các bước:
+
+				Kiểm tra số lượng hàng tồn kho
+
+				Lập danh sách các mặt hàng cần nhập
+
+				Liên hệ nhà cung cấp
+
+				Nhận hàng và kiểm tra số lượng, chất lượng
+
+				Ghi nhận thông tin hàng hóa vào sổ hoặc file Excel
+
+				Sắp xếp hàng hóa vào kho
+
+➡️ Hạn chế: dễ xảy ra sai sót khi ghi chép tay, khó theo dõi lịch sử nhập hàng (dùng excel sẽ không đầy đủ chức năng và giao diện khó theo dõi).
+
+1.2.2. Quy trình quản lý kho
+
+	Công việc quản lý kho bao gồm:
+
+			Theo dõi số lượng tồn kho
+
+			Kiểm tra hạn sử dụng của sản phẩm
+
+			Sắp xếp vị trí lưu trữ hàng hóa
+
+			Kiểm kê định kỳ: ktra số lượng, hạn sử dụng
+
+			➡️ Hạn chế: nếu quản lý thủ công sẽ khó phát hiện hàng sắp hết hoặc hàng tồn lâu.
+
+1.2.3. Quy trình bán hàng
+
+	Quy trình bán hàng tại siêu thị diễn ra như sau:
+
+			Khách hàng chọn sản phẩm
+
+			Nhân viên thu ngân quét mã sản phẩm
+
+			Tính tổng tiền
+
+			Khách hàng thanh toán
+
+			In hóa đơn, Lưu lịch sử bán hàng
+
+			Cập nhật số lượng hàng tồn kho
+
+➡️ Hạn chế: tính toán thủ công dễ nhầm lẫn, mất thời gian cho khách hàng.
+
+1.2.4. Quy trình quản lý hóa đơn
+
+	Hóa đơn bán hàng bao gồm các thông tin:
+
+			Mã hóa đơn
+
+			Thời gian bán
+
+			Nhân viên bán
+
+			Danh sách sản phẩm
+
+			Tổng tiền
+
+1.2.5. Quy trình thống kê và báo cáo
+
+	Siêu thị cần thực hiện các báo cáo:
+
+				Doanh thu theo ngày, tháng
+
+				Sản phẩm bán chạy, ko bán chạy
+
+				Hàng tồn kho
+
+				Hiệu quả kinh doanh: lời, lỗ, tăng trưởng hay ko
+
+➡️ Hạn chế: nếu không có hệ thống tự động thì việc thống kê mất nhiều thời gian và thiếu chính xác.
+
+1.3. Đánh giá hiện trạng hệ thống khi thực hiện thủ công bằng tay
+
+	Qua khảo sát thực tế, có thể rút ra một số nhận xét:
+
+				Công tác quản lý còn rời rạc, thiếu đồng bộ
+
+				Dữ liệu phân tán, khó tổng hợp
+
+				Dễ xảy ra sai sót trong nhập liệu
+
+				Không hỗ trợ tốt cho việc thống kê và ra quyết định
+
+1.4. Mục tiêu của đề tài
+
+	Mục tiêu của đề tài là xây dựng một website quản lý siêu thị với các yêu cầu:
+
+				Tin học hóa toàn bộ quy trình quản lý
+
+				Quản lý tập trung dữ liệu
+
+				Giảm thiểu sai sót trong bán hàng: thêm các note ghi lỗi nhập bán
+
+				Hỗ trợ thống kê, báo cáo nhanh chóng
+
+				Giao diện thân thiện, dễ sử dụng
+
+1.5. Phạm vi và đối tượng sử dụng
+1.5.1. Phạm vi
+
+			Quản lý sản phẩm
+
+			Quản lý kho
+
+			Quản lý hóa đơn
+
+			Quản lý nhân viên
+
+			Thống kê – báo cáo
+
+1.5.2. Đối tượng sử dụng
+
+Quản trị viên (Admin): quản lý toàn bộ hệ thống
+
+Nhân viên: bán hàng, lập hóa đơn
+
+Quản lý: theo dõi báo cáo và doanh thu
+
+
+
+	admin trang web
+			admin sẽ quản lí giao diện, data, chức năng, bảo mật trang web, fix lỗi phát sinh
+				data: 
+				
+	
+	người chủ chuỗi siêu thị:
+	
+			có tất cả quyền của quản lí
+			
+			quản lí nhân viên và người quản lí
+			có quyền sa thải nhan viên, quản lí
+			tăng giảm lương
+			điều chuyển vị trí công tác
+			
+			
+	người quản lí từng hạng mục của siêu thị
+		quản lí chi tiêu: 
+			giá hàng nhập, giá hàng bán
+		quản lí sản phẩm: nguồn hàng, số lượng hàng tồn kho, số lượng hàng dự kiến sẽ nhập
+			cách trưng bày sản phẩm
+		quản lí nhân viên:
+			lương cho nhân viên, vị trí cho nhân viên
+		
+	
+	
+	nhân viên siêu thị
+		nhân viên khuân vác: 
+			chấm công
+		nhân viên thu ngân
