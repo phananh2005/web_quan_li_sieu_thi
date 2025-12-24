@@ -1,41 +1,60 @@
-create TABLE donnhaphang
-(
-    madonnhaphang int AUTO_INCREMENT PRIMARY KEY,
-    ngaynhaphang date
+-- ===============================
+-- ĐƠN NHẬP HÀNG
+-- ===============================
+CREATE TABLE donnhaphang (
+    madonnhaphang INT AUTO_INCREMENT PRIMARY KEY,
+    ngaynhaphang DATE NOT NULL,
+    ghichu TEXT
 );
-create TABLE danhmucsanpham
-(
-    madanhmuc int AUTO_INCREMENT PRIMARY KEY,
-    tendanhmuc varchar(100) not null,
-    mota text
+
+-- ===============================
+-- DANH MỤC
+-- ===============================
+CREATE TABLE danhmuc (
+    madanhmuc INT AUTO_INCREMENT PRIMARY KEY,
+    tendanhmuc VARCHAR(100) NOT NULL,
+    mota TEXT
 );
-CREATE TABLE nhacungcap
-(
-    manhacungcap int AUTO_INCREMENT PRIMARY KEY,
-    tennhacungcap varchar(100) not null
+
+-- ===============================
+-- NHÀ CUNG CẤP
+-- ===============================
+CREATE TABLE nhacungcap (
+    manhacungcap INT AUTO_INCREMENT PRIMARY KEY,
+    tennhacungcap VARCHAR(100) NOT NULL
 );
-CREATE TABLE sanpham
-(
-    masanpham int AUTO_INCREMENT PRIMARY KEY,
-    tensanpham varchar(100) not null,
-    soluong int not null,
-    hansudung date not null,
-    manhacungcap int not null,
-    madanhmuc int not null,
-    madonnhaphang int not null,
-    ghichu text,
+
+-- ===============================
+-- MẶT HÀNG
+-- ===============================
+CREATE TABLE mathang (
+    mamathang INT AUTO_INCREMENT PRIMARY KEY,
+    tenmathang VARCHAR(100) NOT NULL,
+    soluong INT NOT NULL,
+    gianemyet INT NOT NULL,
+    hansudung DATE NOT NULL,
+    manhacungcap INT NOT NULL,
+    madanhmuc INT NOT NULL,
+    madonnhaphang INT NOT NULL,
+    ghichu TEXT,
     FOREIGN KEY (manhacungcap) REFERENCES nhacungcap(manhacungcap),
-    FOREIGN KEY (madanhmuc) REFERENCES danhmucsanpham(madanhmuc),
+    FOREIGN KEY (madanhmuc) REFERENCES danhmuc(madanhmuc),
     FOREIGN KEY (madonnhaphang) REFERENCES donnhaphang(madonnhaphang)
 );
-create table bophan (
-	mabophan int auto_increment primary key,
-	tenbophan varchar(200) not null
+
+-- ===============================
+-- BỘ PHẬN
+-- ===============================
+CREATE TABLE bophan (
+    mabophan INT AUTO_INCREMENT PRIMARY KEY,
+    tenbophan VARCHAR(200) NOT NULL
 );
-CREATE TABLE taikhoan (
+
+-- ===============================
+-- NHÂN VIÊN
+-- ===============================
+CREATE TABLE nhanvien (
     manhanvien VARCHAR(20) PRIMARY KEY,
-    matkhau VARCHAR(100) NOT NULL,
-    chucvu VARCHAR(100) NOT NULL,
     tennhanvien VARCHAR(100) NOT NULL,
     ngaysinh DATE,
     sdt VARCHAR(10),
@@ -44,52 +63,122 @@ CREATE TABLE taikhoan (
     mabophan INT,
     FOREIGN KEY (mabophan) REFERENCES bophan(mabophan)
 );
-create table hoadon (
-	mahoadon int auto_increment primary key,
-	ngayxuat date not null
-);
-create table chitiethoadon (
-	machitiethoadon int auto_increment primary key,
-	mahoadon int,
-	foreign key (mahoadon) references hoadon(mahoadon),
-	masanpham int,
-	foreign key (masanpham) references sanpham(masanpham)
+
+-- ===============================
+-- Tài khoản
+-- ===============================
+CREATE TABLE taikhoan(
+    mataikhoan INT AUTO_INCREMENT PRIMARY KEY,
+    tentaikhoan VARCHAR(20) NOT NULL UNIQUE,
+    matkhau varchar(100) NOT NULL,
+    manhanvien VARCHAR(20) UNIQUE,
+    role Enum ('admin','thu ngân','kho') not null,
+    CONSTRAINT chk_admin_nv
+    CHECK (
+        (role = 'admin' AND manhanvien IS NULL)
+        OR
+        (role IN ('thu ngân','kho') AND manhanvien IS NOT NULL)
+    ),
+    FOREIGN KEY (manhanvien) REFERENCES nhanvien(manhanvien) ON DELETE CASCADE
 );
 
+-- ===============================
+-- HÓA ĐƠN
+-- ===============================
+CREATE TABLE hoadon (
+    mahoadon INT AUTO_INCREMENT PRIMARY KEY,
+    ngayxuat DATE NOT NULL
+);
 
-INSERT INTO donnhaphang (ngaynhaphang) VALUES
-('2024-10-01'),
-('2024-10-05'),
-('2024-10-10');
-INSERT INTO danhmucsanpham (tendanhmuc, mota) VALUES
-('Đồ uống', 'Nước giải khát các loại'),
-('Thực phẩm', 'Thực phẩm tiêu dùng hằng ngày'),
-('Gia dụng', 'Đồ dùng gia đình');
+-- ===============================
+-- CHI TIẾT HÓA ĐƠN
+-- ===============================
+CREATE TABLE chitiethoadon (
+    machitiethoadon INT AUTO_INCREMENT PRIMARY KEY,
+    mahoadon INT NOT NULL,
+    mamathang INT NOT NULL,
+    soluong INT NOT NULL,
+    dongia INT NOT NULL,
+    FOREIGN KEY (mahoadon) REFERENCES hoadon(mahoadon) ON DELETE CASCADE,
+    FOREIGN KEY (mamathang) REFERENCES mathang(mamathang)
+);
+
+-- ===============================
+-- TRIGGERS
+-- ===============================
+DELIMITER //
+
+-- Thêm chi tiết hóa đơn
+CREATE TRIGGER them_ctdh
+AFTER INSERT ON chitiethoadon
+FOR EACH ROW
+BEGIN
+    UPDATE mathang
+    SET soluong = soluong - NEW.soluong
+    WHERE mamathang = NEW.mamathang;
+END//
+
+-- Xóa chi tiết hóa đơn
+CREATE TRIGGER xoa_ctdh
+AFTER DELETE ON chitiethoadon
+FOR EACH ROW
+BEGIN
+    UPDATE mathang
+    SET soluong = soluong + OLD.soluong
+    WHERE mamathang = OLD.mamathang;
+END//
+
+-- Sửa chi tiết hóa đơn
+CREATE TRIGGER sua_ctdh
+AFTER UPDATE ON chitiethoadon
+FOR EACH ROW
+BEGIN
+    UPDATE mathang
+    SET soluong = soluong - NEW.soluong + OLD.soluong
+    WHERE mamathang = NEW.mamathang;
+END//
+
+DELIMITER ;
+
+INSERT INTO donnhaphang (ngaynhaphang, ghichu) VALUES
+('2025-01-05', 'Nhập hàng đầu năm'),
+('2025-02-10', 'Nhập bổ sung');
+INSERT INTO danhmuc (tendanhmuc, mota) VALUES
+('Thực phẩm', 'Các mặt hàng ăn uống'),
+('Đồ uống', 'Nước giải khát'),
+('Gia dụng', 'Đồ dùng sinh hoạt');
 INSERT INTO nhacungcap (tennhacungcap) VALUES
-('Công ty Thực phẩm ABC'),
-('Nhà phân phối XYZ'),
-('Công ty Gia dụng Việt');
-INSERT INTO sanpham
-(tensanpham, soluong, hansudung, manhacungcap, madanhmuc, madonnhaphang, ghichu)
-VALUES
-('Nước ngọt Coca', 100, '2025-06-01', 1, 1, 1, 'Lon 330ml'),
-('Mì tôm Hảo Hảo', 200, '2025-03-15', 2, 2, 2, 'Vị tôm chua cay'),
-('Bột giặt OMO', 50, '2026-01-01', 3, 3, 3, 'Gói 3kg');
+('Công ty ABC'),
+('Công ty Thực phẩm Xanh'),
+('Nhà phân phối Minh Long');
 INSERT INTO bophan (tenbophan) VALUES
 ('Thu ngân'),
-('Kho'),
-('Quản lý');
-INSERT INTO hoadon (ngayxuat) VALUES
-('2024-10-12'),
-('2024-10-13');
-INSERT INTO chitiethoadon (mahoadon, masanpham) VALUES
-(1, 1),
-(1, 2),
-(2, 3);
-INSERT INTO taikhoan
-(manhanvien, matkhau, chucvu, tennhanvien, ngaysinh, sdt, gioitinh, quequan, mabophan)
+('Kho');
+INSERT INTO nhanvien 
+(manhanvien, tennhanvien, ngaysinh, sdt, gioitinh, quequan, mabophan)
 VALUES
-('NV01', '123456', 'Admin', 'Nguyễn Văn A', '1990-01-01', '0901111111', 'nam', 'Hà Nội', 3),
-('NV02', '123456', 'Nhân viên', 'Trần Thị B', '1998-05-10', '0902222222', 'nữ', 'Hải Phòng', 1),
-('NV03', '123456', 'Nhân viên', 'Lê Văn C', '2000-08-20', '0903333333', 'nam', 'Đà Nẵng', 2);
-
+('NV001', 'Nguyễn Văn Ánh', '2000-05-12', '0912345678', 'nam', 'Hà Nội', 1),
+('NV002', 'Trần Thị Bình', '2001-08-20', '0923456789', 'nữ', 'Đà Nẵng', 2),
+('NV003', 'Lê Văn Chang', '1998-11-02', '0934567890', 'nam', 'TP.HCM', 2);
+INSERT INTO mathang
+(tenmathang, soluong, gianemyet, hansudung, manhacungcap, madanhmuc, madonnhaphang, ghichu)
+VALUES
+('Gạo ST25', 100, 25000, '2026-01-01', 2, 1, 1, 'Bao 5kg'),
+('Nước suối Lavie', 200, 6000, '2025-12-31', 1, 2, 1, 'Chai 500ml'),
+('Nồi cơm điện', 50, 850000, '2030-01-01', 3, 3, 2, 'Hàng bảo hành 12 tháng');
+INSERT INTO hoadon (ngayxuat) VALUES
+('2025-02-15'),
+('2025-02-16');
+INSERT INTO chitiethoadon
+(mahoadon, mamathang, soluong, dongia)
+VALUES
+(1, 1, 2, 25000),
+(1, 2, 5, 6000),
+(2, 3, 1, 850000);
+INSERT INTO taikhoan
+(tentaikhoan, matkhau, manhanvien, role)
+values
+('admin','admin',null,'admin'),
+('NV001','NV001','NV001','thu ngân'),
+('NV002','NV002','NV002','kho'),
+('NV003','NV003','NV003','kho')
