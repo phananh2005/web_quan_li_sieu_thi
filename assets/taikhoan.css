@@ -1,0 +1,44 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;   /* gộp viền */
+  font-family: Arial, sans-serif;
+  margin-top: 20px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;            /* để bo góc */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.table th {
+  background: #1e293b;
+  color: white;
+  padding: 12px;
+  font-size: 15px;
+}
+
+.table td {
+  padding: 12px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+.table tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+.table tr:hover {
+  background: #e0f2fe;
+  transition: 0.2s;
+}
+
+.btn_chon:hover{
+    background: #6565dd;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+.div_table{
+    text-align: center;
+    margin-left: 400px;
+    margin-right: 400px;
+}
