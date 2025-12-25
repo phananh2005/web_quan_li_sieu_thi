@@ -1,8 +1,20 @@
+.main{
+  display: flex;
+  justify-content: center;  /* căn giữa theo chiều dọc */
+  align-items: center;      /* căn giữa theo chiều ngang */
+  gap: 30px;
+  padding: 15px;
+}
+
+.div_table{
+    min-width: 600px;
+    text-align: center;
+}
+
 .table {
   width: 100%;
   border-collapse: collapse;   /* gộp viền */
   font-family: Arial, sans-serif;
-  margin-top: 20px;
   background: white;
   border-radius: 10px;
   overflow: hidden;            /* để bo góc */
@@ -37,8 +49,16 @@
   box-shadow: 0 6px 15px rgba(0,0,0,0.2);
 }
 
-.div_table{
-    text-align: center;
-    margin-left: 400px;
-    margin-right: 400px;
+.div_form {
+  background: white;
+  width: 350px;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.div_form label{
+  font-size: 14px;
+  display: block;
+  margin-bottom: 6px;
 }

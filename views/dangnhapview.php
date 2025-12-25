@@ -6,11 +6,11 @@
   if (isset($_POST["taikhoan"],$_POST["matkhau"])){
       $u = trim($_POST["taikhoan"]);
       $p = trim($_POST["matkhau"]);
-      $role = checkTaiKhoan($u,$p);
+      $chucvu = checkTaiKhoan($u,$p);
       if($role !== 0){
         if($role !== 0){
           $_SESSION["taikhoan"]=$u;
-          $_SESSION["chucvu"]=$role;
+          $_SESSION["chucvu"]=$chucvu;
           header("Location: trangchuview.php");
           exit();
         }

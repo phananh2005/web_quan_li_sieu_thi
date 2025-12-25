@@ -1,7 +1,7 @@
 <?php
     session_start();
-    $u = $_SESSION["username"];
-    $role = $_SESSION["role"];
+    $u = $_SESSION["taikhoan"];
+    $role = $_SESSION["chucvu"];
     require_once __DIR__."/../models/taikhoanmodel.php";
 ?>
 <!DOCTYPE html>
@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="/php/web_quan_li_sieu_thi/assets/trangchu.css" >
     <link rel="stylesheet" href="/php/web_quan_li_sieu_thi/assets/taikhoan.css" >
     <title>Trang chủ - Hệ Thống Quản Lý Siêu Thị</title>
-<head>
+</head>
 <body>
     <header class="header">
         <div class="div_tttk">
@@ -47,29 +47,52 @@
             }
         ?>
     </nav>
-    <div class = "div_table">
-        <table class = "table">
-            <tr>
-                <th>Mã tài khoản</th>
-                <th>Tên tài khoản</th>
-                <th>Mật khẩu</th>
-                <th>Mã nhân viên</th>
-                <th>Chức vụ</th>
-                <th>Thao tác</th>
-            </tr>
-            <?php
-                getAllTaiKhoan();
-            ?>
-        </table>
-    </div>
-    <div>
-        <form method="post">
-            <label>Tên tài khoản:</label>
-            <input type="text" name="tentk" value="<?= htmlspecialchars($tentk) ?>" required><br><br>
-            <label>Mật khẩu:</label>
-            <input type="text" name="matkhau" value="<?= htmlspecialchars($matkhau) ?>" required><br><br>
+    <main class="main">
+        <div class = "div_table">
+            <table class = "table">
+                <tr>
+                    <th>Mã tài khoản</th>
+                    <th>Tên tài khoản</th>
+                    <th>Mật khẩu</th>
+                    <th>Mã nhân viên</th>
+                    <th>Chức vụ</th>
+                    <th>Thao tác</th>
+                </tr>
+                <?php
+                    getAllTaiKhoan();
+                ?>
+            </table>
+        </div>
+        <div class = "div_form">
+            <form method="post" id = "form">
+                <label>Tên tài khoản:</label>
+                <input type="text" name="tentk">
+                <label>Mật khẩu:</label>
+                <input type="text" name="matkhau">
+                <label>Mã nhân viên:</label>
+                <select name="manv">
+                    <option value="" disabled selected>Chọn mã nhân viên</option>
+                </select>
+                <label>Chức vụ:</label>
+                <select name = 'chucvu'>
+                    <option value="" disabled selected>Chọn chức vụ</option>
+                    <option value="admin">Admin</option>
+                    <option value="kho">Kho</option>
+                    <option value="thu ngân">Thu ngân</option>    
+                </select>
+                <button type="submit" name = "timkiem">Tìm kiếm</button>
+                <button type="submit" name = "them">Thêm</button>
+                <button type="submit" name = "sua">Sửa</button>
+                <button type="submit" name = "xoa">Xóa</button>
+                <button type="submit" onclick="xoaForm()">Hủy</button>
 
-            <label>Mã nhân viên:</label>
-        </form>
-    </div>
+                <script>
+                    function xoaForm(){
+                        document.getElementById("form").reset();
+                    }
+                </script>
+            </form>
+        </div>
+    </main>
 </body>
+</html>

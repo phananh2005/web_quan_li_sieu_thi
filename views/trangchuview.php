@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/php/web_quan_li_sieu_thi/assets/trangchu.css" >
     <title>Trang chủ - Hệ Thống Quản Lý Siêu Thị</title>
-<head>
+</head>
 <body>
     <header class="header">
         <div class="div_tttk">
@@ -46,3 +46,4 @@
         ?>
     </nav>
 </body>
+</html>
