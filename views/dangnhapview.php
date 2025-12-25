@@ -7,13 +7,11 @@
       $u = trim($_POST["taikhoan"]);
       $p = trim($_POST["matkhau"]);
       $chucvu = checkTaiKhoan($u,$p);
-      if($role !== 0){
-        if($role !== 0){
-          $_SESSION["taikhoan"]=$u;
-          $_SESSION["chucvu"]=$chucvu;
-          header("Location: trangchuview.php");
-          exit();
-        }
+      if($chucvu !== 0){
+        $_SESSION["taikhoan"]=$u;
+        $_SESSION["chucvu"]=$chucvu;
+        header("Location: trangchuview.php");
+        exit();
       }
       else {  
         $thongbao="Sai tài khoản mật khẩu";

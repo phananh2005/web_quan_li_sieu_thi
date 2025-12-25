@@ -72,12 +72,12 @@ CREATE TABLE taikhoan(
     tentaikhoan VARCHAR(20) NOT NULL UNIQUE,
     matkhau varchar(100) NOT NULL,
     manhanvien VARCHAR(20) UNIQUE,
-    role Enum ('admin','thu ngân','kho') not null,
+    chucvu Enum ('Admin','Thu ngân','Kho') not null,
     CONSTRAINT chk_admin_nv
     CHECK (
-        (role = 'admin' AND manhanvien IS NULL)
+        (chucvu = 'admin' AND manhanvien IS NULL)
         OR
-        (role IN ('thu ngân','kho') AND manhanvien IS NOT NULL)
+        (chucvu IN ('thu ngân','kho') AND manhanvien IS NOT NULL)
     ),
     FOREIGN KEY (manhanvien) REFERENCES nhanvien(manhanvien) ON DELETE CASCADE
 );
@@ -176,7 +176,7 @@ VALUES
 (1, 2, 5, 6000),
 (2, 3, 1, 850000);
 INSERT INTO taikhoan
-(tentaikhoan, matkhau, manhanvien, role)
+(tentaikhoan, matkhau, manhanvien, chucvu)
 values
 ('admin','admin',null,'admin'),
 ('NV001','NV001','NV001','thu ngân'),

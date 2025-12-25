@@ -34,9 +34,9 @@
                 echo '<a href="thongkedoanhthuview.php">Thống kê doanh thu</a>';
             }
 
-            if($role == "thu ngân") chucNangThuNgan();
-            else if($role == "kho") chucNangKho();
-            else if($role == "admin"){
+            if($role == "Thu ngân") chucNangThuNgan();
+            else if($role == "Kho") chucNangKho();
+            else if($role == "Admin"){
                 chucNangKho();
                 chucNangThuNgan();                
                 echo '<a href="nhanvienview.php">Nhân viên</a>';
