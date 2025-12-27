@@ -41,40 +41,38 @@
         return $sql;
     }
 
-    if(isset($_POST['button_form_themvasua'])){
-        if(isset($_POST['form_mataikhoan'],$_POST['form_tentaikhoan'],$_POST['form_matkhau'],$_POST['form_chucvu'])){
-            $mataikhoan = $_POST['form_mataikhoan'];
-            $tentaikhoan = $_POST['form_tentaikhoan'];
-            $matkhau = $_POST['form_matkhau'];
-            $chucvu = $_POST['form_chucvu'];
-            
-            if($chucvu != "Admin"){
-                if(isset($_POST['form_manhanvien'])){
-                    $manhanvien_sql = "'" . $_POST['form_manhanvien'] . "'";
-                }
-                else thongBao("Phải điền đầy đủ field");
+    if(isset($_POST['form_mataikhoan'],$_POST['form_tentaikhoan'],$_POST['form_matkhau']
+        ,$_POST['form_chucvu'],$_POST['button_form_themvasua'])){
+        $mataikhoan = $_POST['form_mataikhoan'];
+        $tentaikhoan = $_POST['form_tentaikhoan'];
+        $matkhau = $_POST['form_matkhau'];
+        $chucvu = $_POST['form_chucvu'];
+        
+        if($chucvu != "Admin"){
+            if(isset($_POST['form_manhanvien'])){
+                $manhanvien_sql = "'" . $_POST['form_manhanvien'] . "'";
             }
-            else{
-                $manhanvien_sql = "null";
-            }
-
-            if($_POST['button_form_themvasua'] == "btn_them"){
-                $sql = "INSERT INTO taikhoan (tentaikhoan, matkhau, manhanvien, chucvu) values 
-                    ('".$tentaikhoan."','".$matkhau."',".$manhanvien_sql.",'".$chucvu."')";
-                $row = writeTaiKhoan($sql);
-                if($row>0) thongBao("Thêm thành công");
-                else thongBao("Thêm thất bại");
-            }
-
-            if($_POST['button_form_themvasua'] == "btn_sua"){
-                $sql = "Update taikhoan SET tentaikhoan ='".$tentaikhoan."', matkhau = '".$matkhau."', 
-                manhanvien = ".$manhanvien_sql.", chucvu = '".$chucvu."' where mataikhoan =".$mataikhoan;
-                $row = writeTaiKhoan($sql);
-                if($row>0) thongBao("Sửa thành công");
-                else thongBao("Sửa thất bại");
-            }
+            else thongBao("Phải điền đầy đủ field");
         }
-        else thongBao("Phải điền đầy đủ field");
+        else{
+            $manhanvien_sql = "null";
+        }
+
+        if($_POST['button_form_themvasua'] == "btn_them"){
+            $sql = "INSERT INTO taikhoan (tentaikhoan, matkhau, manhanvien, chucvu) values 
+                ('".$tentaikhoan."','".$matkhau."',".$manhanvien_sql.",'".$chucvu."')";
+            $row = writeTaiKhoan($sql);
+            if($row>0) thongBao("Thêm thành công");
+            else thongBao("Thêm thất bại");
+        }
+
+        if($_POST['button_form_themvasua'] == "btn_sua"){
+            $sql = "Update taikhoan SET tentaikhoan ='".$tentaikhoan."', matkhau = '".$matkhau."', 
+            manhanvien = ".$manhanvien_sql.", chucvu = '".$chucvu."' where mataikhoan =".$mataikhoan;
+            $row = writeTaiKhoan($sql);
+            if($row>0) thongBao("Sửa thành công");
+            else thongBao("Sửa thất bại");
+        }
     }
 
 

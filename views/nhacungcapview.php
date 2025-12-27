@@ -51,46 +51,44 @@
         else return "'".$s."'";
     }
 
-    if(isset($_POST['button_form_themvasua'])){
-        if(isset($_POST['form_manhacungcap'],$_POST['form_tennhacungcap'],$_POST['form_masothue'],$_POST['form_sodienthoai'],
-                $_POST['form_diachi'],$_POST['form_quocgia'],$_POST['form_ghichu'])){
-            
-            $manhacungcap = $_POST['form_manhacungcap'];
-            $tennhacungcap = $_POST['form_tennhacungcap'];
+    if(isset($_POST['form_manhacungcap'],$_POST['form_tennhacungcap'],$_POST['form_masothue'],$_POST['form_sodienthoai'],
+            $_POST['form_diachi'],$_POST['form_quocgia'],$_POST['form_ghichu'],$_POST['button_form_themvasua'])){
+        
+        $manhacungcap = $_POST['form_manhacungcap'];
+        $tennhacungcap = $_POST['form_tennhacungcap'];
 
-            $masothue = kiemTraDuLieuInput($_POST['form_masothue']);
-            $sodienthoai = kiemTraDuLieuInput($_POST['form_sodienthoai']);
-            $diachi = kiemTraDuLieuInput($_POST['form_diachi']);
-            $quocgia = kiemTraDuLieuInput($_POST['form_quocgia']);
-            $ghichu = kiemTraDuLieuInput($_POST['form_ghichu']);
+        $masothue = kiemTraDuLieuInput($_POST['form_masothue']);
+        $sodienthoai = kiemTraDuLieuInput($_POST['form_sodienthoai']);
+        $diachi = kiemTraDuLieuInput($_POST['form_diachi']);
+        $quocgia = kiemTraDuLieuInput($_POST['form_quocgia']);
+        $ghichu = kiemTraDuLieuInput($_POST['form_ghichu']);
 
-            if($_POST['button_form_themvasua'] == "btn_them"){
-                if(empty($tennhacungcap)) thongBao("Điền tên nhà cung cấp");
-                else{
-                    $sql = "INSERT INTO nhacungcap (tennhacungcap, masothue, sodienthoai, diachi, quocgia, ghichu) values 
-                    ('".$tennhacungcap."',".$masothue.",".$sodienthoai.",".$diachi.",".$quocgia.",".$ghichu.")";
-                    $row = writeNhaCungCap($sql);
-                    if($row>0) thongBao("Thêm thành công");
-                    else thongBao("Thêm thất bại");
-                }     
-            }
+        if($_POST['button_form_themvasua'] == "btn_them"){
+            if(empty($tennhacungcap)) thongBao("Điền tên nhà cung cấp");
+            else{
+                $sql = "INSERT INTO nhacungcap (tennhacungcap, masothue, sodienthoai, diachi, quocgia, ghichu) values 
+                ('".$tennhacungcap."',".$masothue.",".$sodienthoai.",".$diachi.",".$quocgia.",".$ghichu.")";
+                $row = writeNhaCungCap($sql);
+                if($row>0) thongBao("Thêm thành công");
+                else thongBao("Thêm thất bại");
+            }     
+        }
 
-            if($_POST['button_form_themvasua'] == "btn_sua"){
-                if(empty($tennhacungcap)) thongBao("Điền tên nhà cung cấp");
-                else {
-                    $sql = "Update nhacungcap SET tennhacungcap ='".$tennhacungcap."', masothue = ".$masothue.", 
-                    sodienthoai = ".$sodienthoai.", diachi = ".$diachi.", quocgia = ".$quocgia.", ghichu =".$ghichu.
-                    " where manhacungcap =".$manhacungcap;
-                    // var_dump($sql);
-                    // die();
-                    $row = writeNhaCungCap($sql);
-                    if($row>0) thongBao("Sửa thành công");
-                    else thongBao("Sửa thất bại");
-                }
+        if($_POST['button_form_themvasua'] == "btn_sua"){
+            if(empty($tennhacungcap)) thongBao("Điền tên nhà cung cấp");
+            else {
+                $sql = "Update nhacungcap SET tennhacungcap ='".$tennhacungcap."', masothue = ".$masothue.", 
+                sodienthoai = ".$sodienthoai.", diachi = ".$diachi.", quocgia = ".$quocgia.", ghichu =".$ghichu.
+                " where manhacungcap =".$manhacungcap;
+                // var_dump($sql);
+                // die();
+                $row = writeNhaCungCap($sql);
+                if($row>0) thongBao("Sửa thành công");
+                else thongBao("Sửa thất bại");
             }
         }
-        else thongBao("Lỗi gửi request");
     }
+
 ?>
 <!DOCTYPE html>
 <html lang="vi">
