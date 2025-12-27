@@ -28,8 +28,8 @@
             foreach($row as $feild => $value){
                 echo "<input type='hidden' name='table_".$feild."' value='".$value."'>";
             }
-            echo "<button type='submit' name='button_table' value='btn_chon'>Chọn</button>
-                  <button type='submit' name='button_table' value='btn_xoa'>Xóa</button>
+            echo "<button type='submit' name='button_table_chon' value='btn_chon'>Chọn</button>
+                  <button type='submit' name='button_table_xoa' value='btn_xoa'>Xóa</button>
                   </form>
                 </td>
                 </tr>";

@@ -21,7 +21,12 @@ CREATE TABLE danhmuc (
 -- ===============================
 CREATE TABLE nhacungcap (
     manhacungcap INT AUTO_INCREMENT PRIMARY KEY,
-    tennhacungcap VARCHAR(100) NOT NULL
+    tennhacungcap VARCHAR(100) NOT NULL,
+    masothue VARCHAR(100),
+    sdt VARCHAR(11),
+    diachi VARCHAR(100),
+    quocgia VARCHAR(100),
+    ghichu TEXT
 );
 
 -- ===============================
@@ -31,7 +36,7 @@ CREATE TABLE mathang (
     mamathang INT AUTO_INCREMENT PRIMARY KEY,
     tenmathang VARCHAR(100) NOT NULL,
     soluong INT NOT NULL,
-    gianemyet INT NOT NULL,
+    gianiemyet INT NOT NULL,
     hansudung DATE NOT NULL,
     manhacungcap INT NOT NULL,
     madanhmuc INT NOT NULL,
@@ -65,19 +70,19 @@ CREATE TABLE nhanvien (
 );
 
 -- ===============================
--- Tài khoản
+-- TÀI KHOẢN
 -- ===============================
 CREATE TABLE taikhoan(
     mataikhoan INT AUTO_INCREMENT PRIMARY KEY,
     tentaikhoan VARCHAR(20) NOT NULL UNIQUE,
-    matkhau varchar(100) NOT NULL,
+    matkhau VARCHAR(100) NOT NULL,
     manhanvien VARCHAR(20) UNIQUE,
-    chucvu Enum ('Admin','Thu ngân','Kho') not null,
+    chucvu ENUM ('Admin','Thu ngân','Kho') NOT NULL,
     CONSTRAINT chk_admin_nv
     CHECK (
-        (chucvu = 'admin' AND manhanvien IS NULL)
+        (chucvu = 'Admin' AND manhanvien IS NULL)
         OR
-        (chucvu IN ('thu ngân','kho') AND manhanvien IS NOT NULL)
+        (chucvu IN ('Thu ngân','Kho') AND manhanvien IS NOT NULL)
     ),
     FOREIGN KEY (manhanvien) REFERENCES nhanvien(manhanvien) ON DELETE CASCADE
 );
@@ -140,45 +145,66 @@ END//
 
 DELIMITER ;
 
+-- ===============================
+-- INSERT DỮ LIỆU
+-- ===============================
+
 INSERT INTO donnhaphang (ngaynhaphang, ghichu) VALUES
 ('2025-01-05', 'Nhập hàng đầu năm'),
 ('2025-02-10', 'Nhập bổ sung');
+
 INSERT INTO danhmuc (tendanhmuc, mota) VALUES
 ('Thực phẩm', 'Các mặt hàng ăn uống'),
 ('Đồ uống', 'Nước giải khát'),
 ('Gia dụng', 'Đồ dùng sinh hoạt');
-INSERT INTO nhacungcap (tennhacungcap) VALUES
-('Công ty ABC'),
-('Công ty Thực phẩm Xanh'),
-('Nhà phân phối Minh Long');
+
+INSERT INTO nhacungcap 
+(tennhacungcap, masothue, sdt, diachi, quocgia, ghichu)
+VALUES
+('Công ty Nước giải khát Lavie Việt Nam', '0311111111', '0909000001', 'KCN Sóng Thần, Dĩ An, Bình Dương', 'Việt Nam', 'Cung cấp nước suối Lavie chai 500ml và các loại khác'),
+('Hợp tác xã Gạo ST25 Sóc Trăng', '0302222222', '0909000002', 'Huyện Mỹ Xuyên, Sóc Trăng', 'Việt Nam', 'Chuyên cung cấp gạo ST25 loại 5kg'),
+('Công ty Điện gia dụng SunHouse', '0103333333', '0909000003', 'KCN Quang Minh, Mê Linh, Hà Nội', 'Việt Nam', 'Cung cấp nồi cơm điện chính hãng, bảo hành 12 tháng'),
+('Công ty Bánh kẹo Kinh Đô', '0304444444', '0909000004', 'Quận Bình Tân, TP.HCM', 'Việt Nam', 'Chuyên cung cấp bánh kẹo, snack, sản phẩm tết'),
+('Công ty Thiết bị Gia dụng Panasonic', 'JP555555555', '0909000005', 'Osaka, Japan', 'Nhật Bản', 'Cung cấp hàng gia dụng chính hãng, bảo hành dài hạn');
+
 INSERT INTO bophan (tenbophan) VALUES
 ('Thu ngân'),
 ('Kho');
+
 INSERT INTO nhanvien 
 (manhanvien, tennhanvien, ngaysinh, sdt, gioitinh, quequan, mabophan)
 VALUES
 ('NV001', 'Nguyễn Văn Ánh', '2000-05-12', '0912345678', 'nam', 'Hà Nội', 1),
 ('NV002', 'Trần Thị Bình', '2001-08-20', '0923456789', 'nữ', 'Đà Nẵng', 2),
 ('NV003', 'Lê Văn Chang', '1998-11-02', '0934567890', 'nam', 'TP.HCM', 2);
-INSERT INTO mathang
-(tenmathang, soluong, gianemyet, hansudung, manhacungcap, madanhmuc, madonnhaphang, ghichu)
+
+INSERT INTO mathang 
+(tenmathang, soluong, gianiemyet, hansudung, manhacungcap, madanhmuc, madonnhaphang, ghichu)
 VALUES
-('Gạo ST25', 100, 25000, '2026-01-01', 2, 1, 1, 'Bao 5kg'),
-('Nước suối Lavie', 200, 6000, '2025-12-31', 1, 2, 1, 'Chai 500ml'),
-('Nồi cơm điện', 50, 850000, '2030-01-01', 3, 3, 2, 'Hàng bảo hành 12 tháng');
+('Gạo ST25', 98, 25000, '2026-01-01', 2, 1, 1, 'Bao 5kg'),
+('Nước suối Lavie', 195, 6000, '2025-12-31', 1, 2, 1, 'Chai 500ml'),
+('Nồi cơm điện', 49, 850000, '2030-01-01', 3, 3, 2, 'Hàng bảo hành 12 tháng'),
+('Bánh Cosy Marie', 120, 18000, '2026-05-01', 4, 1, 1, 'Hộp 200g'),
+('Mì Hảo Hảo tôm chua cay', 300, 4000, '2025-11-15', 4, 1, 1, 'Gói 75g'),
+('Nước mắm Nam Ngư', 80, 35000, '2027-01-01', 3, 1, 2, 'Chai 750ml'),
+('Bếp điện từ Panasonic', 20, 1350000, '2032-01-01', 5, 3, 2, 'Bảo hành 24 tháng'),
+('Sữa tươi TH True Milk', 150, 32000, '2025-09-30', 1, 1, 1, 'Hộp 1L');
+
 INSERT INTO hoadon (ngayxuat) VALUES
 ('2025-02-15'),
 ('2025-02-16');
+
 INSERT INTO chitiethoadon
 (mahoadon, mamathang, soluong, dongia)
 VALUES
 (1, 1, 2, 25000),
 (1, 2, 5, 6000),
 (2, 3, 1, 850000);
+
 INSERT INTO taikhoan
 (tentaikhoan, matkhau, manhanvien, chucvu)
-values
-('admin','admin',null,'admin'),
-('NV001','NV001','NV001','thu ngân'),
-('NV002','NV002','NV002','kho'),
-('NV003','NV003','NV003','kho')
+VALUES
+('admin','admin',NULL,'Admin'),
+('NV001','NV001','NV001','Thu ngân'),
+('NV002','NV002','NV002','Kho'),
+('NV003','NV003','NV003','Kho');

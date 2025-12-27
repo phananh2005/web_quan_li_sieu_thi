@@ -1,0 +1,78 @@
+.main{
+  display: flex;
+  justify-content: center;  /* căn giữa theo chiều dọc */
+  align-items: center;      /* căn giữa theo chiều ngang */
+  gap: 30px;
+  padding: 15px;
+  flex-direction: column;
+}
+
+.div_table{
+    min-width: 600px;
+    text-align: center;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;   /* gộp viền */
+  font-family: Arial, sans-serif;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;            /* để bo góc */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.table th {
+  background: #1e293b;
+  color: white;
+  padding: 12px;
+  font-size: 15px;
+}
+
+.table td {
+  padding: 12px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+.table tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+.table tr:hover {
+  background: #e0f2fe;
+  transition: 0.2s;
+}
+
+.btn_chon:hover{
+    background: #6565dd;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+}
+
+.div_form {
+  background: white;
+  width: 100%;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;   /* xếp nhiều dòng */
+  gap: 12px;
+}
+
+.form-row {
+  display: flex;            /* label + input cùng hàng */
+  align-items: center;
+  gap: 10px;
+}
+
+.form-row label {
+  width: 120px;             /* cố định chiều rộng label để thẳng hàng */
+  font-size: 14px;
+}
+
+.form-row input {
+  flex: 1;                  /* input chiếm phần còn lại */
+  padding: 6px 10px;
+}

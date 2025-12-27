@@ -12,8 +12,8 @@
             </script>";
     }
 
-    if(isset($_POST['button_table'], $_POST['table_mataikhoan']) && $_POST['button_table'] == 'btn_xoa'){
-        $rows = writeTaiKhoan("Delete FROM taikhoan WHERE mataikhoan = '". $_POST['table_mataikhoan']."'");
+    if(isset($_POST['button_table_xoa'], $_POST['table_mataikhoan'])){
+        $rows = writeTaiKhoan("Delete FROM taikhoan WHERE mataikhoan = ". $_POST['table_mataikhoan']);
         if($rows > 0){
             thongBao("Xóa thành công");
         }else{
@@ -23,7 +23,7 @@
 
     function createSqlTimKiem(){
         $sql = "Select * from taikhoan where 1=1";
-        if(isset($_POST['button_form_timkiem']) && $_POST['button_form_timkiem'] == 'btn_timkiem'){  
+        if(isset($_POST['button_form_timkiem'])){  
 
             if(isset($_POST['form_tentaikhoan']) && $_POST['form_tentaikhoan'] != ""){
                 $sql .= " and tentaikhoan like '%" . $_POST['form_tentaikhoan'] . "%'";
@@ -41,7 +41,7 @@
         return $sql;
     }
 
-    if(isset($_POST['button_form'])){
+    if(isset($_POST['button_form_themvasua'])){
         if(isset($_POST['form_mataikhoan'],$_POST['form_tentaikhoan'],$_POST['form_matkhau'],$_POST['form_chucvu'])){
             $mataikhoan = $_POST['form_mataikhoan'];
             $tentaikhoan = $_POST['form_tentaikhoan'];
@@ -58,7 +58,7 @@
                 $manhanvien_sql = "null";
             }
 
-            if($_POST['button_form'] == 'btn_them'){
+            if($_POST['button_form_themvasua'] == "btn_them"){
                 $sql = "INSERT INTO taikhoan (tentaikhoan, matkhau, manhanvien, chucvu) values 
                     ('".$tentaikhoan."','".$matkhau."',".$manhanvien_sql.",'".$chucvu."')";
                 $row = writeTaiKhoan($sql);
@@ -66,9 +66,9 @@
                 else thongBao("Thêm thất bại");
             }
 
-            if($_POST['button_form'] == 'btn_sua'){
+            if($_POST['button_form_themvasua'] == "btn_sua"){
                 $sql = "Update taikhoan SET tentaikhoan ='".$tentaikhoan."', matkhau = '".$matkhau."', 
-                manhanvien = ".$manhanvien_sql.", chucvu = '".$chucvu."' where mataikhoan ='".$mataikhoan."'";
+                manhanvien = ".$manhanvien_sql.", chucvu = '".$chucvu."' where mataikhoan =".$mataikhoan;
                 $row = writeTaiKhoan($sql);
                 if($row>0) thongBao("Sửa thành công");
                 else thongBao("Sửa thất bại");
@@ -161,8 +161,8 @@
                 </select>
                 <br>
                 <button type="submit" name='button_form_timkiem' value = "btn_timkiem">Tìm kiếm</button>
-                <button type="submit" name='button_form' value = "btn_them">Thêm</button>
-                <button type="submit" name='button_form' value = "btn_sua">Sửa</button>
+                <button type="submit" name='button_form_themvasua' value = "btn_them">Thêm</button>
+                <button type="submit" name='button_form_themvasua' value = "btn_sua">Sửa</button>
                 <button type="button" onclick="xoaForm()">Hủy</button>
             </form>
         </div>
@@ -198,7 +198,7 @@
 
 <?php
     if(isset($_POST['table_mataikhoan'],$_POST['table_tentaikhoan'],$_POST['table_matkhau']
-            ,$_POST['table_manhanvien'],$_POST['table_chucvu'],$_POST['button_table']) && $_POST['button_table'] == 'btn_chon'){
+            ,$_POST['table_manhanvien'],$_POST['table_chucvu'],$_POST['button_table_chon'])){
         $mataikhoan = $_POST['table_mataikhoan'];
         $tentaikhoan = $_POST['table_tentaikhoan'];
         $matkhau = $_POST['table_matkhau'];
