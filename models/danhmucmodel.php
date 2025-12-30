@@ -1,16 +1,7 @@
 <?php
     require_once __DIR__."/../database/ConnectDB.php";
 
-    function getMaNhanVienToSelect(){
-        global $conn;
-        $result = mysqli_query($conn, "Select manhanvien from nhanvien order by manhanvien");
-        while($row=mysqli_fetch_assoc($result)){
-            echo "<option value='".$row["manhanvien"]."'>".$row["manhanvien"]."</option>";
-        }
-        mysqli_free_result($result);
-    }
-
-    function getNhanVienToTable($sql){
+    function getDanhMucToTable($sql){
         global $conn;
         $result = mysqli_query($conn, $sql);
         while($row=mysqli_fetch_assoc($result)){
@@ -32,10 +23,18 @@
         mysqli_free_result($result);
     }
 
-    function writeNhanVien($sql){
+    function getMaDanhMucToSelect(){
+        global $conn;
+        $result = mysqli_query($conn, "Select madanhmuc from danhmuc order by madanhmuc");
+        while($row=mysqli_fetch_assoc($result)){
+            echo "<option value='".$row["madanhmuc"]."'>".$row["madanhmuc"]."</option>";
+        }
+        mysqli_free_result($result);
+    }
+
+    function writeDanhMuc($sql){
         global $conn;
         $result = mysqli_query($conn, $sql);
         return mysqli_affected_rows($conn);
     }
-
 ?>

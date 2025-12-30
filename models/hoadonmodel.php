@@ -1,19 +1,10 @@
 <?php
     require_once __DIR__."/../database/ConnectDB.php";
 
-    function getMaNhanVienToSelect(){
-        global $conn;
-        $result = mysqli_query($conn, "Select manhanvien from nhanvien order by manhanvien");
-        while($row=mysqli_fetch_assoc($result)){
-            echo "<option value='".$row["manhanvien"]."'>".$row["manhanvien"]."</option>";
-        }
-        mysqli_free_result($result);
-    }
-
-    function getNhanVienToTable($sql){
+    function getHDToTable($sql){
         global $conn;
         $result = mysqli_query($conn, $sql);
-        while($row=mysqli_fetch_assoc($result)){
+        while($row=mysqli_fetch_assoc($result)){    
             echo "<tr>";
             foreach($row as $value){
                 echo "<td>$value</td>";
@@ -23,7 +14,7 @@
             foreach($row as $feild => $value){
                 echo "<input type='hidden' name='table_".$feild."' value='".$value."'>";
             }
-            echo "<button type='submit' name='button_table_chon' value='btn_chon'>Chọn</button>
+            echo "<button type='submit' name='button_table_xemchitiet' value='btn_xemchitiet'>Xem chi tiết</button>
                   <button type='submit' name='button_table_xoa' value='btn_xoa'>Xóa</button>
                   </form>
                 </td>
@@ -32,10 +23,18 @@
         mysqli_free_result($result);
     }
 
-    function writeNhanVien($sql){
+    function createHD(){
+        global $conn;
+        $result = mysqli_query($conn, "Insert hoadon (ngayxuat) values (CURDATE())");
+        if(!$result){
+            return null; 
+        }
+        return mysqli_insert_id($conn);
+    }
+
+    function write($sql){
         global $conn;
         $result = mysqli_query($conn, $sql);
         return mysqli_affected_rows($conn);
     }
-
 ?>

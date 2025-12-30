@@ -1,0 +1,64 @@
+.main_nhanvien{
+    display: flex;
+    justify-content: center;  /* căn giữa theo chiều dọc */
+    align-items: center;      /* căn giữa theo chiều ngang */
+    gap: 30px;
+    padding: 15px;
+    /* background-color: #ff4800; */
+}
+
+.div_table_nhanvien{
+    min-width: 600px;
+    text-align: center;
+}
+
+.table_nhanvien {
+  width: 100%;
+  border-collapse: collapse;   /* gộp viền */
+  font-family: Arial, sans-serif;
+  background: rgb(213, 213, 213);
+  border-radius: 10px;
+  overflow: hidden;            /* để bo góc */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.table_nhanvien th {
+  background: #1e293b;
+  color: rgb(255, 255, 255);
+  padding: 12px;
+  font-size: 15px;
+}
+
+.table_nhanvien tr {
+  background: #ffffff;
+  color: rgb(19, 19, 19);
+  padding: 12px;
+  font-size: 15px;
+}
+
+.table_nhanvien td {
+  background: #ffffff;
+  color: rgb(19, 19, 19);
+  padding: 5px;
+  font-size: 15px;
+}
+
+.div_form_nhanvien {
+  background: white;
+  width: 350px;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.div_form_nhanvien label{
+  font-size: 14px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+#button_nhanvien{
+  font-size: 14px;
+  display: block;
+  margin-top: 16px;
+}
