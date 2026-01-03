@@ -23,9 +23,27 @@
         mysqli_free_result($result);
     }
 
-    function createHD(){
+    function getMaMH($tenmathang){
         global $conn;
-        $result = mysqli_query($conn, "Insert hoadon (ngayxuat) values (CURDATE())");
+        $result = mysqli_query($conn, "Select mamathang from mathang where tenmathang='".$tenmathang."'");
+        if($row=mysqli_fetch_assoc($result)){
+            return $row['mamathang'];
+        }
+        else return null;
+    }
+
+    function getDonGiaBan($mamathang){
+        global $conn;
+        $result = mysqli_query($conn, "Select dongiaban from mathang where mamathang='".$mamathang."'");
+        if($row=mysqli_fetch_assoc($result)){
+            return $row['dongiaban'];
+        }
+        else return null;
+    }
+
+    function createHD($u){
+        global $conn;
+        $result = mysqli_query($conn, "Insert hoadon (ngayxuat, mataikhoan) values (CURDATE(), (SELECT mataikhoan FROM taikhoan WHERE tentaikhoan = '$u'))");
         if(!$result){
             return null; 
         }
@@ -36,5 +54,30 @@
         global $conn;
         $result = mysqli_query($conn, $sql);
         return mysqli_affected_rows($conn);
+    }
+
+    function getMHToTableHD($sql){
+        global $conn;
+        $result = mysqli_query($conn, $sql);
+        while($row=mysqli_fetch_assoc($result)){
+            echo "<tr>";
+            foreach($row as $value){
+                echo "<td>$value</td>";
+            }
+            echo"</tr>";
+        }
+        mysqli_free_result($result);
+    }
+
+    function getTenMHToList(){
+        global $conn;
+        $result = mysqli_query($conn, "Select tenmathang, dongiaban, soluong from mathang where soluong > 0");
+        while($row=mysqli_fetch_assoc($result)){
+            echo "<option value='".$row['tenmathang']."' 
+            label='".$row['tenmathang']." - ".number_format($row['dongiaban'])." VNĐ - Kho: ".$row['soluong']."' 
+            data-gia='".$row['dongiaban']."' 
+            data-soluong='".$row['soluong']."'></option>";
+        }
+        mysqli_free_result($result);
     }
 ?>

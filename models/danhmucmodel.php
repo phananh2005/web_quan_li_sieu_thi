@@ -23,15 +23,6 @@
         mysqli_free_result($result);
     }
 
-    function getMaDanhMucToSelect(){
-        global $conn;
-        $result = mysqli_query($conn, "Select madanhmuc from danhmuc order by madanhmuc");
-        while($row=mysqli_fetch_assoc($result)){
-            echo "<option value='".$row["madanhmuc"]."'>".$row["madanhmuc"]."</option>";
-        }
-        mysqli_free_result($result);
-    }
-
     function writeDanhMuc($sql){
         global $conn;
         $result = mysqli_query($conn, $sql);

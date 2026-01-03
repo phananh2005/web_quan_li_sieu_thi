@@ -2,7 +2,7 @@
   session_start();
   header('Content-Type: text/html; charset=utf-8');
   $thongbao="";
-  require_once __DIR__."/../models/taikhoanmodel.php";
+  require_once __DIR__."/../models/dangnhapmodel.php";
   if (isset($_POST["taikhoan"],$_POST["matkhau"])){
       $u = trim($_POST["taikhoan"]);
       $p = trim($_POST["matkhau"]);
@@ -23,7 +23,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/php/web_quan_li_sieu_thi/assets/dangnhap.css" >
+    <link rel="stylesheet" href="../assets/dangnhap.css" >
     <title>Đăng nhập - Hệ Thống Quản Lý Siêu Thị</title>
 </head>
 

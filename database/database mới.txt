@@ -1,0 +1,257 @@
+# QUẢN LÍ NHÂN SỰ
+-- ===============================
+-- BỘ PHẬN
+-- ===============================
+CREATE TABLE bophan (
+    mabophan INT AUTO_INCREMENT PRIMARY KEY,
+    tenbophan VARCHAR(200) NOT NULL
+);
+
+-- ===============================
+-- NHÂN VIÊN
+-- ===============================
+CREATE TABLE nhanvien (
+    manhanvien VARCHAR(20) PRIMARY KEY,
+    tennhanvien VARCHAR(100) NOT NULL,
+    ngaysinh DATE,
+    sodienthoai VARCHAR(11),
+    gioitinh ENUM('Nam','Nữ') NOT NULL,
+    quequan VARCHAR(100) NOT NULL,
+    mabophan INT NOT NULL,
+    trangthai ENUM ('Đang làm việc', 'Đã nghỉ việc') NOT NULL DEFAULT 'Đang làm việc',
+    FOREIGN KEY (mabophan) REFERENCES bophan(mabophan)
+);
+
+-- ===============================
+-- TÀI KHOẢN
+-- ===============================
+CREATE TABLE taikhoan(
+    mataikhoan INT AUTO_INCREMENT PRIMARY KEY,
+    tentaikhoan VARCHAR(20) NOT NULL UNIQUE,
+    matkhau VARCHAR(255) NOT NULL,
+    manhanvien VARCHAR(20) UNIQUE,
+    chucvu ENUM ('Admin','Bán hàng','Kho') NOT NULL,
+    CONSTRAINT chkadminnv
+    CHECK (
+        (chucvu = 'Admin' AND manhanvien IS NULL)
+        OR
+        (chucvu IN ('Bán hàng','Kho') AND manhanvien IS NOT NULL)
+    ),
+    FOREIGN KEY (manhanvien) REFERENCES nhanvien(manhanvien)
+);
+
+
+# QUẢN LÍ KHO
+
+-- ===============================
+-- DANH MỤC
+-- ===============================
+CREATE TABLE danhmuc (
+    madanhmuc INT AUTO_INCREMENT PRIMARY KEY,
+    tendanhmuc VARCHAR(100) NOT NULL,
+    ghichu TEXT
+);
+
+-- ===============================
+-- MẶT HÀNG
+-- ===============================
+CREATE TABLE mathang (
+    mamathang INT AUTO_INCREMENT PRIMARY KEY,
+    tenmathang VARCHAR(100) NOT NULL,
+    soluong INT NOT NULL DEFAULT 0,
+    dongiaban INT NOT NULL,
+    madanhmuc INT NOT NULL,
+    ghichu TEXT,
+    FOREIGN KEY (madanhmuc) REFERENCES danhmuc(madanhmuc)
+);
+
+-- ===============================
+-- NHÀ CUNG CẤP
+-- ===============================
+CREATE TABLE nhacungcap (
+    manhacungcap INT AUTO_INCREMENT PRIMARY KEY,
+    tennhacungcap VARCHAR(100) NOT NULL,
+    masothue VARCHAR(100),
+    sodienthoai VARCHAR(11) NOT NULL,
+    diachi VARCHAR(100),
+    ghichu TEXT
+);
+
+-- ===============================
+-- ĐƠN NHẬP HÀNG
+-- ===============================
+CREATE TABLE donnhaphang (
+    madonnhaphang INT AUTO_INCREMENT PRIMARY KEY,
+    manhacungcap INT NOT NULL,
+    ngaynhaphang DATE NOT NULL,
+    mataikhoan INT NOT NULL,
+    ghichu TEXT,
+    FOREIGN KEY (mataikhoan) REFERENCES taikhoan(mataikhoan),
+    FOREIGN KEY (manhacungcap) REFERENCES nhacungcap(manhacungcap)
+);
+
+-- ===============================
+-- CHI TIẾT ĐƠN NHẬP HÀNG
+-- ===============================
+CREATE TABLE chitietdonnhaphang (
+    machitietdonnhaphang INT AUTO_INCREMENT PRIMARY KEY,
+    mamathang INT NOT NULL,
+    madonnhaphang INT NOT NULL,
+    soluong INT NOT NULL,
+    dongianhap INT NOT NULL,
+    FOREIGN KEY (madonnhaphang) REFERENCES donnhaphang(madonnhaphang) ON DELETE CASCADE,
+    FOREIGN KEY (mamathang) REFERENCES mathang(mamathang)
+);
+
+
+# QUẢN LÍ BÁN HÀNG
+
+-- ===============================
+-- HÓA ĐƠN
+-- ===============================
+CREATE TABLE hoadon (
+    mahoadon INT AUTO_INCREMENT PRIMARY KEY,
+    ngayxuat DATE NOT NULL,
+    mataikhoan INT NOT NULL,
+    FOREIGN KEY (mataikhoan) REFERENCES taikhoan(mataikhoan)
+);
+
+-- ===============================
+-- CHI TIẾT HÓA ĐƠN
+-- ===============================
+CREATE TABLE chitiethoadon (
+    machitiethoadon INT AUTO_INCREMENT PRIMARY KEY,
+    mahoadon INT NOT NULL,
+    mamathang INT NOT NULL,
+    soluong INT NOT NULL,
+    dongiaban INT NOT NULL,
+    FOREIGN KEY (mahoadon) REFERENCES hoadon(mahoadon) ON DELETE CASCADE,
+    FOREIGN KEY (mamathang) REFERENCES mathang(mamathang)
+);
+
+-- ===============================
+-- TRIGGERS
+-- ===============================
+DELIMITER //
+
+-- Thêm chi tiết hóa đơn
+CREATE TRIGGER themctdh
+AFTER INSERT ON chitiethoadon
+FOR EACH ROW
+BEGIN
+    UPDATE mathang
+    SET soluong = soluong - NEW.soluong
+    WHERE mamathang = NEW.mamathang;
+END//
+
+-- Xóa chi tiết hóa đơn
+CREATE TRIGGER xoactdh
+AFTER DELETE ON chitiethoadon
+FOR EACH ROW
+BEGIN
+    UPDATE mathang
+    SET soluong = soluong + OLD.soluong
+    WHERE mamathang = OLD.mamathang;
+END//
+
+-- Thêm chi tiết đơn nhập hàng: cộng tồn kho
+CREATE TRIGGER themctdnh
+AFTER INSERT ON chitietdonnhaphang
+FOR EACH ROW
+BEGIN
+    UPDATE mathang
+    SET soluong = soluong + NEW.soluong
+    WHERE mamathang = NEW.mamathang;
+END//
+
+-- Xóa chi tiết đơn nhập hàng: trừ tồn kho
+CREATE TRIGGER xoactdnh
+AFTER DELETE ON chitietdonnhaphang
+FOR EACH ROW
+BEGIN
+    UPDATE mathang
+    SET soluong = soluong - OLD.soluong
+    WHERE mamathang = OLD.mamathang;
+END//
+
+DELIMITER ;
+
+-- ===============================
+-- INSERT DỮ LIỆU
+-- ===============================
+INSERT INTO bophan (tenbophan) VALUES
+('Bán hàng'),
+('Kho'),
+('Kỹ thuật');
+
+INSERT INTO nhanvien (manhanvien, tennhanvien, ngaysinh, sodienthoai, gioitinh, quequan, mabophan, trangthai)
+VALUES
+('NV001', 'Nguyễn Văn An', '2002-05-12', '0909123456', 'Nam', 'Hà Nội', 1, 'Đang làm việc'),
+('NV002', 'Trần Thị Bình', '2001-10-20', '0912345678', 'Nữ', 'Đà Nẵng', 2, 'Đang làm việc'),
+('NV003', 'Lê Quốc Cường', '2000-03-15', '0987654321', 'Nam', 'TP.HCM', 1, 'Đang làm việc'),
+('NV004', 'Phạm Ngọc Dung', '1999-07-08', '0978123456', 'Nữ', 'Huế', 3, 'Đang làm việc'),
+('NV005', 'Vũ Minh Đức', '1998-12-01', '0966123456', 'Nam', 'Hải Phòng', 2, 'Đã nghỉ việc');
+
+INSERT INTO taikhoan (tentaikhoan, matkhau, manhanvien, chucvu)
+VALUES
+('admin', 'admin123', NULL, 'Admin'),
+('banhang1', 'bh123', 'NV001', 'Bán hàng'),
+('banhang2', 'bh456', 'NV003', 'Bán hàng'),
+('kho1', 'kho123', 'NV002', 'Kho');
+
+INSERT INTO danhmuc (tendanhmuc, ghichu) VALUES
+('Laptop', 'Laptop văn phòng, gaming'),
+('Điện thoại', 'Smartphone các hãng'),
+('Linh kiện PC', 'RAM, SSD, VGA, CPU,...'),
+('Phụ kiện', 'Chuột, bàn phím, tai nghe,...'),
+('Thiết bị mạng', 'Router, switch, modem,...');
+
+INSERT INTO mathang (tenmathang, soluong, dongiaban, madanhmuc, ghichu)
+VALUES
+('Laptop Dell Inspiron 15', 10, 15500000, 1, 'Core i5, RAM 8GB, SSD 512GB'),
+('Laptop ASUS TUF Gaming F15', 5, 23500000, 1, 'Core i7, RTX 3050'),
+('iPhone 13 128GB', 8, 18500000, 2, 'Màu đen'),
+('Samsung Galaxy S22', 6, 16500000, 2, 'Màu trắng'),
+('RAM DDR4 8GB Kingston', 50, 450000, 3, 'Bus 3200'),
+('SSD NVMe 512GB Samsung', 30, 1250000, 3, 'Tốc độ cao'),
+('VGA RTX 3060 12GB', 4, 8500000, 3, 'Card đồ họa'),
+('Chuột Logitech G102', 40, 350000, 4, 'Gaming'),
+('Bàn phím cơ Akko 3087', 20, 950000, 4, 'Switch đỏ'),
+('Router TP-Link Archer C6', 15, 650000, 5, 'Wifi AC1200');
+
+INSERT INTO nhacungcap (tennhacungcap, masothue, sodienthoai, diachi, ghichu)
+VALUES
+('Công ty Phân phối Nhữ Nam', '0101234567', '0911000111', 'Hà Nội', 'Chuyên laptop và linh kiện'),
+('Công ty Điện tử Phan Long', '0209876543', '0909000999', 'TP.HCM', 'Chuyên điện thoại chính hãng'),
+('Nhà cung cấp Linh Kiện 24H', '0311122233', '0988000777', 'Đà Nẵng', 'Chuyên RAM/SSD/VGA');
+
+INSERT INTO donnhaphang (manhacungcap, ngaynhaphang, mataikhoan, ghichu)
+VALUES
+(1, '2025-12-15', 4, 'Nhập hàng tháng 12'),
+(2, '2025-12-20', 4, 'Nhập điện thoại cuối năm'),
+(3, '2025-12-25', 4, 'Nhập linh kiện PC');
+
+INSERT INTO chitietdonnhaphang (mamathang, madonnhaphang, soluong, dongianhap)
+VALUES
+(1, 1, 5, 14000000),
+(2, 1, 3, 21500000),
+(3, 2, 4, 17000000),
+(4, 2, 3, 15000000),
+(5, 3, 20, 400000),
+(6, 3, 10, 1100000),
+(7, 3, 2, 7900000);
+
+INSERT INTO hoadon (ngayxuat, mataikhoan)
+VALUES
+('2025-12-26', 2),
+('2025-12-27', 3),
+('2025-12-28', 3);
+
+INSERT INTO chitiethoadon (mahoadon, mamathang, soluong, dongiaban)
+VALUES
+(1, 8, 2, 350000),
+(1, 9, 1, 950000),
+(2, 3, 1, 18500000),
+(2, 10, 1, 650000),
+(3, 5, 4, 450000),
+(3, 6, 2, 1250000);

@@ -36,9 +36,6 @@
             if(isset($_POST['form_diachi'])){
                 $sql .= " and diachi like '%" . $_POST['form_diachi'] . "%'";
             } 
-            if(isset($_POST['form_quocgia'])){
-                $sql .= " and quocgia like '%" . $_POST['form_quocgia'] . "%'";
-            } 
             if(isset($_POST['form_ghichu'])){
                 $sql .= " and ghichu like '%" . $_POST['form_ghichu'] . "%'";
             } 
@@ -52,22 +49,24 @@
     }
 
     if(isset($_POST['form_manhacungcap'],$_POST['form_tennhacungcap'],$_POST['form_masothue'],$_POST['form_sodienthoai'],
-            $_POST['form_diachi'],$_POST['form_quocgia'],$_POST['form_ghichu'],$_POST['button_form_themvasua'])){
+            $_POST['form_diachi'],$_POST['form_ghichu'],$_POST['button_form_themvasua'])){
         
         $manhacungcap = $_POST['form_manhacungcap'];
         $tennhacungcap = $_POST['form_tennhacungcap'];
+        $sodienthoai = $_POST['form_sodienthoai'];
 
         $masothue = kiemTraDuLieuInput($_POST['form_masothue']);
-        $sodienthoai = kiemTraDuLieuInput($_POST['form_sodienthoai']);
         $diachi = kiemTraDuLieuInput($_POST['form_diachi']);
-        $quocgia = kiemTraDuLieuInput($_POST['form_quocgia']);
         $ghichu = kiemTraDuLieuInput($_POST['form_ghichu']);
 
         if($_POST['button_form_themvasua'] == "btn_them"){
             if(empty($tennhacungcap)) thongBao("Điền tên nhà cung cấp");
+            else if(empty($sodienthoai)) thongBao("Điền số điện thoại");
             else{
-                $sql = "INSERT INTO nhacungcap (tennhacungcap, masothue, sodienthoai, diachi, quocgia, ghichu) values 
-                ('".$tennhacungcap."',".$masothue.",".$sodienthoai.",".$diachi.",".$quocgia.",".$ghichu.")";
+                $sql = "INSERT INTO nhacungcap (tennhacungcap, masothue, sodienthoai, diachi, ghichu) values 
+                ('".$tennhacungcap."',".$masothue.",'".$sodienthoai."',".$diachi.",".$ghichu.")";
+                // var_dump($sql);
+                // die();
                 $row = writeNhaCungCap($sql);
                 if($row>0) thongBao("Thêm thành công");
                 else thongBao("Thêm thất bại");
@@ -76,9 +75,10 @@
 
         if($_POST['button_form_themvasua'] == "btn_sua"){
             if(empty($tennhacungcap)) thongBao("Điền tên nhà cung cấp");
+            else if(empty($sodienthoai)) thongBao("Điền số điện thoại");
             else {
                 $sql = "Update nhacungcap SET tennhacungcap ='".$tennhacungcap."', masothue = ".$masothue.", 
-                sodienthoai = ".$sodienthoai.", diachi = ".$diachi.", quocgia = ".$quocgia.", ghichu =".$ghichu.
+                sodienthoai = '".$sodienthoai."', diachi = ".$diachi.", ghichu =".$ghichu.
                 " where manhacungcap =".$manhacungcap;
                 // var_dump($sql);
                 // die();
@@ -95,8 +95,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/php/web_quan_li_sieu_thi/assets/trangchu.css" >
-    <link rel="stylesheet" href="/php/web_quan_li_sieu_thi/assets/nhacungcap.css" >
+    <link rel="stylesheet" href="../assets/trangchu.css" >
+    <link rel="stylesheet" href="../assets/nhacungcap.css" >
     <title>Trang chủ - Hệ Thống Quản Lý Siêu Thị</title>
 </head>
 <body>
@@ -110,27 +110,30 @@
     </header>
     <nav class="navbar">
         <?php
+            echo '<a href="mathangview.php">Mặt hàng</a>';
+
             function chucNangKho(){
-                echo '<a href="mathangview.php">Mặt hàng</a>';
                 echo '<a href="danhmucview.php">Danh mục</a>';
                 echo '<a href="nhacungcapview.php" class = "active">Nhà cung cấp</a>';
                 echo '<a href="donnhaphangview.php">Đơn nhập hàng</a>';
             }
-            function chucNangThuNgan(){
+            function chucNangThuNgan($role){
                 echo '<a href="hoadonview.php">Hóa đơn</a>';
                 echo '<a href="spbanchayview.php">Sản phẩm bán chạy</a>';
-                echo '<a href="thongkedoanhthuview.php">Thống kê doanh thu</a>';
+                if ($role == "Bán hàng") echo '<a href="thongkedoanhthuview.php">Thống kê doanh thu</a>';
             }
-
-            if($role == "Thu ngân") chucNangThuNgan();
-            else if($role == "Kho") chucNangKho();
-            else if($role == "Admin"){
+            function chucNangAdmin($role){
                 chucNangKho();
-                chucNangThuNgan();                
+                chucNangThuNgan($role);
+                echo '<a href="thongkethuchiview.php">Thống kê thu - chi</a>';
                 echo '<a href="nhanvienview.php">Nhân viên</a>';
                 echo '<a href="bophanview.php">Bộ phận</a>';
                 echo '<a href="taikhoanview.php">Tài khoản</a>';
             }
+
+            if($role == "Bán hàng") chucNangThuNgan($role);
+            else if($role == "Kho") chucNangKho();
+            else if($role == "Admin") chucNangAdmin($role);
         ?>
     </nav>
     <main class="main">
@@ -157,10 +160,6 @@
                     <input type="text" name="form_diachi" id='ip_diachi'>
                 </div>
                 <div class="form-row">
-                    <label>Quốc gia:</label>
-                    <input type="text" name="form_quocgia" id='ip_quocgia'>
-                </div>
-                <div class="form-row">
                     <label>Ghi chú:</label>
                     <textarea rows="6" cols="40" style="resize: none;"   name="form_ghichu" id='ta_ghichu'></textarea>
                 </div>
@@ -179,7 +178,6 @@
                     <th>Mã số thuế</th>
                     <th>Số điện thoại</th>
                     <th>Địa chỉ</th>
-                    <th>Quốc gia</th>
                     <th>Ghi chú</th>
                     <th>Thao tác</th>
                 </tr>
@@ -197,28 +195,26 @@
         document.getElementById("form").reset();
     }
 
-    function setValueForm(manhacungcap, tennhacungcap, masothue, sodienthoai, diachi, quocgia, ghichu){
+    function setValueForm(manhacungcap, tennhacungcap, masothue, sodienthoai, diachi, ghichu){
         document.getElementById("ip_manhacungcap").value=manhacungcap;
         document.getElementById("ip_tennhacungcap").value=tennhacungcap;
         document.getElementById("ip_masothue").value=masothue;
         document.getElementById("ip_sodienthoai").value=sodienthoai;
         document.getElementById("ip_diachi").value=diachi;
-        document.getElementById("ip_quocgia").value=quocgia;
         document.getElementById("ta_ghichu").value=ghichu;
     }
 </script>
 
 <?php
     if(isset($_POST['table_manhacungcap'],$_POST['table_tennhacungcap'],$_POST['table_masothue'],$_POST['table_sodienthoai'],
-    $_POST['table_diachi'],$_POST['table_quocgia'],$_POST['table_ghichu'],$_POST['button_table_chon'])){
+    $_POST['table_diachi'],$_POST['table_ghichu'],$_POST['button_table_chon'])){
         $manhacungcap = $_POST['table_manhacungcap'];
         $tennhacungcap = $_POST['table_tennhacungcap'];
         $masothue = $_POST['table_masothue'];
         $sodienthoai = $_POST['table_sodienthoai'];
         $diachi = $_POST['table_diachi'];
-        $quocgia = $_POST['table_quocgia'];
         $ghichu = $_POST['table_ghichu'];
         echo "<script> setValueForm('" .$manhacungcap . "','" . $tennhacungcap . "','" . $masothue . "','" 
-            . $sodienthoai . "','" .$diachi. "','" . $quocgia . "','" . $ghichu . "')</script>";
+            . $sodienthoai . "','" .$diachi. "','" . $ghichu . "')</script>";
     }
 ?>

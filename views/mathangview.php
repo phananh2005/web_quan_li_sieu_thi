@@ -1,3 +1,18 @@
+<script>
+    function xoaForm(){
+        document.getElementById("form").reset();
+    }
+
+    function setValueForm(mamathang, tenmathang, soluong, dongiaban,madanhmuc, ghichu){
+        document.getElementById("ip_mamathang").value=mamathang;
+        document.getElementById("ip_tenmathang").value=tenmathang;
+        document.getElementById("ip_soluong").value=soluong;
+        document.getElementById("ip_dongiaban").value=dongiaban;
+        document.getElementById("sel_tendanhmuc").value=madanhmuc;
+        document.getElementById("ta_ghichu").value=ghichu;
+    }
+</script>
+
 <?php
     session_start();
     $u = $_SESSION["taikhoan"];
@@ -19,77 +34,82 @@
             thongBao("Xóa thất bại");
         }
     }
-
-    if(isset($_POST['table_mamathang'],$_POST['table_tenmathang'],$_POST['table_soluong'],$_POST['table_gianiemyet'],
-    $_POST['table_hansudung'],$_POST['table_manhacungcap'],$_POST['table_madanhmuc'],$_POST['table_madonnhaphang'],$_POST['table_ghichu'],$_POST['button_table_chon'])){
-        $mamathang = $_POST['table_mamathang'];
-        $tenmathang = $_POST['table_tenmathang'];
-        $soluong = $_POST['table_soluong'];
-        $gianiemyet = $_POST['table_gianiemyet'];
-        $hansudung = $_POST['table_hansudung'];
-        $manhacungcap = $_POST['table_manhacungcap'];
-        $madanhmuc = $_POST['table_madanhmuc'];
-        $madonnhaphang = $_POST['table_madonnhaphang'];
-        $ghichu = $_POST['table_ghichu'];
-        echo "<script> setValueForm('" .$mamathang . "','" . $tenmathang . "','" 
-            . $soluong . "','" . $gianiemyet . "','" .$hansudung. "','" . $manhacungcap . "', '" . $madanhmuc . "', '" . $madonnhaphang . "','" . $ghichu . "')</script>";
-    }
-
+    
     function createSqlTimKiem(){
-        $sql = "Select * from mathang where 1=1";
-        if(isset($_POST['button_form_timkiem'])){  
+        $sql = "
+        SELECT 
+            mh.mamathang,
+            mh.tenmathang,
+            mh.soluong,
+            mh.dongiaban,
 
-            if(isset($_POST['form_tenmathang']) && $_POST['form_tenmathang'] != ""){
-                $sql .= " and tenmathang like '%" . $_POST['form_tenmathang'] . "%'";
-            } 
-            if(isset($_POST['form_soluong'])){
-                $sql .= " and soluong like '%" . $_POST['form_soluong'] . "%'";
-            } 
-            if(isset($_POST['form_gianiemyet']) && $_POST['form_gianiemyet'] != ""){
-                $sql .= " and gianiemyet like '%" . $_POST['form_gianiemyet'] . "%'";
-            } 
-            if(isset($_POST['form_hansudung'])){
-                $sql .= " and hansudung like '%" . $_POST['form_hansudung'] . "%'";
-            } 
-            if(isset($_POST['form_manhacungcap'])){
-                $sql .= " and manhacungcap like '%" . $_POST['form_manhacungcap'] . "%'";
-            } 
-            if(isset($_POST['form_madanhmuc'])){
-                $sql .= " and madanhmuc like '%" . $_POST['form_madanhmuc'] . "%'";
-            } 
-            if(isset($_POST['form_madonnhaphang'])){
-                $sql .= " and madonnhaphang like '%" . $_POST['form_madonnhaphang'] . "%'";
-            } 
-            if(isset($_POST['form_ghichu'])){
-                $sql .= " and ghichu like '%" . $_POST['form_ghichu'] . "%'";
-            } 
+            dm.tendanhmuc,
+            dm.madanhmuc,
+
+            mh.ghichu
+        FROM mathang mh
+        JOIN danhmuc dm ON mh.madanhmuc = dm.madanhmuc
+        WHERE 1=1";
+
+        if(isset($_POST['button_form_timkiem'])){
+
+            if(!empty($_POST['form_tenmathang'])){
+                $sql .= " AND mh.tenmathang LIKE '%".$_POST['form_tenmathang']."%'";
+            }
+            if($_POST['form_soluong'] !== ""){
+                $sql .= " AND mh.soluong = ".$_POST['form_soluong'];
+            }
+            if($_POST['form_dongiaban'] !== ""){
+                $sql .= " AND mh.dongiaban = ".$_POST['form_dongiaban'];
+            }
+            if(!empty($_POST['form_tendanhmuc'])){
+                $sql .= " AND dm.madanhmuc = ".$_POST['form_tendanhmuc'];
+            }
         }
+        $sql .= "order by mh.mamathang";
         return $sql;
     }
+
+
+    function createSqlTable(){
+        return "
+        SELECT 
+            mh.mamathang,
+            mh.tenmathang,
+            mh.soluong,
+            mh.dongiaban,
+
+            dm.tendanhmuc,
+            dm.madanhmuc,
+
+            mh.ghichu
+        FROM mathang mh
+        JOIN danhmuc dm ON mh.madanhmuc = dm.madanhmuc
+        ";
+    }
+
+
 
     function kiemTraDuLieuInput ($s){
         if(empty($s)) return "null";
         else return "'".$s."'";
     }
 
-    if(isset($_POST['form_mamathang'],$_POST['form_tenmathang'],$_POST['form_soluong'],$_POST['form_gianiemyet'],
-            $_POST['form_hansudung'],$_POST['form_manhacungcap'],$_POST['form_madanhmuc'],$_POST['form_madonnhaphang'],$_POST['form_ghichu'],$_POST['button_form_themvasua'])){
+    if(isset($_POST['form_mamathang'],$_POST['form_tenmathang'],$_POST['form_soluong'],$_POST['form_dongiaban'],
+            $_POST['form_tendanhmuc'],$_POST['form_ghichu'],$_POST['button_form_themvasua'])){
         
         $mamathang = $_POST['form_mamathang'];
         $tenmathang = $_POST['form_tenmathang'];
         $soluong = kiemTraDuLieuInput($_POST['form_soluong']);
-        $gianiemyet = kiemTraDuLieuInput($_POST['form_gianiemyet']);
-        $hansudung = kiemTraDuLieuInput($_POST['form_hansudung']);
-        $manhacungcap = kiemTraDuLieuInput($_POST['form_manhacungcap']);
-        $madanhmuc = kiemTraDuLieuInput($_POST['form_madanhmuc']);
-        $madonnhaphang = kiemTraDuLieuInput($_POST['form_madonnhaphang']);
+        $dongiaban = kiemTraDuLieuInput($_POST['form_dongiaban']);
+        $madanhmuc = kiemTraDuLieuInput($_POST['form_tendanhmuc']);
         $ghichu = kiemTraDuLieuInput($_POST['form_ghichu']);
 
         if($_POST['button_form_themvasua'] == "btn_them"){
             if(empty($tenmathang)) thongBao("Điền tên mặt hàng ");
             else{
-                $sql = "INSERT INTO mathang (tenmathang, soluong, gianiemyet, hansudung, manhacungcap, madanhmuc, madonnhaphang, ghichu) values 
-                ('".$tenmathang."',".$soluong.",".$gianiemyet.",".$hansudung.",".$manhacungcap.", ".$madanhmuc.", ".$madonnhaphang.", ".$ghichu.")";
+                $sql = "INSERT INTO mathang (tenmathang, soluong, dongiaban, madanhmuc, ghichu) values 
+                ('".$tenmathang."',".$soluong.",".$dongiaban.", ".$madanhmuc.", ".$ghichu.")";
                 $row = writeMH($sql);
                 if($row>0) thongBao("Thêm thành công");
                 else thongBao("Thêm thất bại");
@@ -100,12 +120,10 @@
             if(empty($tenmathang)) thongBao("Điền tên nhà cung cấp");
             else {
                 $sql = "Update mathang SET tenmathang ='".$tenmathang."', 
-                soluong = ".$soluong.", gianiemyet = ".$gianiemyet.", hansudung = ".$hansudung.",
-                 manhacungcap = ".$manhacungcap.", madanhmuc = ".$madanhmuc.", madonnhaphang = ".$manhacungcap3.", ghichu =".$ghichu.
-                " where mamathang =".$mamathang;
-                // var_dump($sql);
-                // die();
-                $row = write($sql);
+                soluong = ".$soluong.", dongiaban = ".$dongiaban.",
+                 madanhmuc = ".$madanhmuc.", ghichu =".$ghichu."
+                where mamathang =".$mamathang;
+                $row = writeMH($sql);
                 if($row>0) thongBao("Sửa thành công");
                 else thongBao("Sửa thất bại");
             }
@@ -133,27 +151,30 @@
     </header>
     <nav class="navbar">
         <?php
+            echo '<a href="mathangview.php" class = "active">Mặt hàng</a>';
+
             function chucNangKho(){
-                echo '<a href="mathangview.php"  class = "active" >Mặt hàng</a>';
                 echo '<a href="danhmucview.php">Danh mục</a>';
                 echo '<a href="nhacungcapview.php">Nhà cung cấp</a>';
                 echo '<a href="donnhaphangview.php">Đơn nhập hàng</a>';
             }
-            function chucNangThuNgan(){
+            function chucNangThuNgan($role){
                 echo '<a href="hoadonview.php">Hóa đơn</a>';
                 echo '<a href="spbanchayview.php">Sản phẩm bán chạy</a>';
-                echo '<a href="thongkedoanhthuview.php">Thống kê doanh thu</a>';
+                if ($role == "Bán hàng") echo '<a href="thongkedoanhthuview.php">Thống kê doanh thu</a>';
             }
-
-            if($role == "Thu ngân") chucNangThuNgan();
-            else if($role == "Kho") chucNangKho();
-            else if($role == "Admin"){
+            function chucNangAdmin($role){
                 chucNangKho();
-                chucNangThuNgan();                
+                chucNangThuNgan($role);
+                echo '<a href="thongkethuchiview.php">Thống kê thu - chi</a>';
                 echo '<a href="nhanvienview.php">Nhân viên</a>';
                 echo '<a href="bophanview.php">Bộ phận</a>';
                 echo '<a href="taikhoanview.php">Tài khoản</a>';
             }
+
+            if($role == "Bán hàng") chucNangThuNgan($role);
+            else if($role == "Kho") chucNangKho();
+            else if($role == "Admin") chucNangAdmin($role);
         ?>
     </nav>
     <main class="main">
@@ -172,24 +193,15 @@
                     <input type="number" name="form_soluong" id='ip_soluong'>
                 </div>
                 <div class="form-row">
-                    <label>Giá Niêm Yết:</label>
-                    <input type="number" name="form_gianiemyet" id='ip_gianiemyet'>
+                    <label>Đơn Giá:</label>
+                    <input type="number" name="form_dongiaban" id='ip_dongiaban'>
                 </div>
                 <div class="form-row">
-                    <label>HSD:</label>
-                    <input type="text" name="form_hansudung" id='ip_hansudung'>
-                </div>
-                <div class="form-row">
-                    <label>Nhà Cung Cấp:</label>
-                    <input type="number" name="form_manhacungcap" id='ip_manhacungcap'>
-                </div>
-                <div class="form-row">
-                    <label>Mã Danh Mục:</label>
-                    <input type="number" name="form_madanhmuc" id='ip_madanhmuc'>
-                </div>
-                <div class="form-row">
-                    <label>Mã Đơn Nhập Hàng:</label>
-                    <input type="number" name="form_madonnhaphang" id='ip_madonnhaphang'>
+                    <label>Danh Mục:</label>
+                    <select name="form_tendanhmuc" id = "sel_tendanhmuc">
+                        <option disabled selected>Chọn Danh Mục</cite></option>
+                        <?php getTenDanhMucToSelect(); ?> 
+                    </select>
                 </div>
                 <div class="form-row">
                     <label>Ghi chú:</label>
@@ -207,17 +219,19 @@
                 <tr>
                     <th>Mã Măt Hàng </th>
                     <th>Tên Măt Hàng</th>
-                    <th>Giá Niêm Yết</th>
+                    <th>Đơn Giá</th>
                     <th>Số Lượng</th>
-                    <th>HSD</th>
-                    <th>Nhà Cung Cấp</th>
-                    <th>Mã Danh Mục</th>
-                    <th>Mã Đơn Nhập Hàng</th>
+                    <th>Danh Mục</th>
                     <th>Ghi chú</th>
                     <th>Thao tác</th>
                 </tr>
-                <?php
-                    getMHToTable(createSqlTimKiem());
+                    <?php
+                    if(isset($_POST['button_form_timkiem'])){
+                        $sql = createSqlTimKiem();
+                    } else {
+                        $sql = createSqlTable();
+                    }
+                    getMHToTable($sql);
                 ?>
             </table>
         </div>
@@ -225,20 +239,18 @@
 </body>
 </html>
 
-<script>
-    function xoaForm(){
-        document.getElementById("form").reset();
-    }
+<?php
+if(isset($_POST['button_table_chon'])){
+    echo "<script>
+        setValueForm(
+            '{$_POST['table_mamathang']}',
+            '{$_POST['table_tenmathang']}',
+            '{$_POST['table_soluong']}',
+            '{$_POST['table_dongiaban']}',
+            '{$_POST['table_madanhmuc']}',
+            '{$_POST['table_ghichu']}'
+        );
+    </script>";
+}
 
-    function setValueForm(mamathang, tenmathang, soluong, gianiemyet, hansudung, manhacungcap,madanhmuc, madonnhaphang, ghichu){
-        document.getElementById("ip_mamathang").value=mamathang;
-        document.getElementById("ip_tenmathang").value=tenmathang;
-        document.getElementById("ip_soluong").value=soluong;
-        document.getElementById("ip_gianiemyet").value=gianiemyet;
-        document.getElementById("ip_hansudung").value=hansudung;
-        document.getElementById("ip_manhacungcap").value=manhacungcap;
-        document.getElementById("ip_madanhmuc").value=madanhmuc;
-        document.getElementById("ip_madonnhaphang").value=madonnhaphang;
-        document.getElementById("ta_ghichu").value=ghichu;
-    }
-</script>
+?>

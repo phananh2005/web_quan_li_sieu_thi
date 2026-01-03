@@ -2,7 +2,6 @@
     session_start();
     $user = $_SESSION["taikhoan"];
     $role = $_SESSION["chucvu"];
-    require_once __DIR__."/../models/nhanvienmodel.php";
     require_once __DIR__."/../models/taikhoanmodel.php";
     
     function thongBao($noidung){
@@ -47,7 +46,7 @@
         $tentaikhoan = $_POST['form_tentaikhoan'];
         $matkhau = $_POST['form_matkhau'];
         $chucvu = $_POST['form_chucvu'];
-        
+
         if($chucvu != "Admin"){
             if(isset($_POST['form_manhanvien'])){
                 $manhanvien_sql = "'" . $_POST['form_manhanvien'] . "'";
@@ -57,6 +56,9 @@
         else{
             $manhanvien_sql = "null";
         }
+
+        if($tentaikhoan == "" || $matkhau == "" || $chucvu == "") 
+            thongBao("Phải điền đầy đủ field"); 
 
         if($_POST['button_form_themvasua'] == "btn_them"){
             $sql = "INSERT INTO taikhoan (tentaikhoan, matkhau, manhanvien, chucvu) values 
@@ -82,8 +84,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/php/web_quan_li_sieu_thi/assets/trangchu.css" >
-    <link rel="stylesheet" href="/php/web_quan_li_sieu_thi/assets/taikhoan.css" >
+    <link rel="stylesheet" href="../assets/trangchu.css" >
+    <link rel="stylesheet" href="../assets/taikhoan.css" >
     <title>Trang chủ - Hệ Thống Quản Lý Siêu Thị</title>
 </head>
 <body>
@@ -97,27 +99,30 @@
     </header>
     <nav class="navbar">
         <?php
+            echo '<a href="mathangview.php">Mặt hàng</a>';
+
             function chucNangKho(){
-                echo '<a href="mathangview.php">Mặt hàng</a>';
                 echo '<a href="danhmucview.php">Danh mục</a>';
                 echo '<a href="nhacungcapview.php">Nhà cung cấp</a>';
                 echo '<a href="donnhaphangview.php">Đơn nhập hàng</a>';
             }
-            function chucNangThuNgan(){
+            function chucNangThuNgan($role){
                 echo '<a href="hoadonview.php">Hóa đơn</a>';
                 echo '<a href="spbanchayview.php">Sản phẩm bán chạy</a>';
-                echo '<a href="thongkedoanhthuview.php">Thống kê doanh thu</a>';
+                if ($role == "Bán hàng") echo '<a href="thongkedoanhthuview.php">Thống kê doanh thu</a>';
             }
-
-            if($role == "Thu ngân") chucNangThuNgan();
-            else if($role == "Kho") chucNangKho();
-            else if($role == "Admin"){
+            function chucNangAdmin($role){
                 chucNangKho();
-                chucNangThuNgan();                
+                chucNangThuNgan($role);
+                echo '<a href="thongkethuchiview.php">Thống kê thu - chi</a>';
                 echo '<a href="nhanvienview.php">Nhân viên</a>';
                 echo '<a href="bophanview.php">Bộ phận</a>';
-                echo '<a href="taikhoanview.php"class = "active">Tài khoản</a>'; 
+                echo '<a href="taikhoanview.php" class = "active">Tài khoản</a>';
             }
+
+            if($role == "Bán hàng") chucNangThuNgan($role);
+            else if($role == "Kho") chucNangKho();
+            else if($role == "Admin") chucNangAdmin($role);
         ?>
     </nav>
     <main class="main">
@@ -155,7 +160,7 @@
                     <option disabled selected>Chọn chức vụ</option>
                     <option value="Admin">Admin</option>
                     <option value="Kho">Kho</option>
-                    <option value="Thu ngân">Thu ngân</option>    
+                    <option value="Bán hàng">Bán hàng</option>    
                 </select>
                 <br>
                 <button type="submit" name='button_form_timkiem' value = "btn_timkiem">Tìm kiếm</button>

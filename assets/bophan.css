@@ -4,13 +4,11 @@
   align-items: center;      /* căn giữa theo chiều ngang */
   gap: 30px;
   padding: 15px;
-  flex-direction: column;
 }
 
 .div_table{
     min-width: 600px;
     text-align: center;
-    padding: 15px;
 }
 
 .table {
@@ -24,7 +22,7 @@
 }
 
 .table th {
-  background: #d31414;
+  background: #1e293b;
   color: white;
   padding: 12px;
   font-size: 15px;
@@ -53,27 +51,14 @@
 
 .div_form {
   background: white;
-  width: 60%;
+  width: 350px;
   padding: 30px;
   border-radius: 12px;
   box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-  display: flex;
-  flex-direction: column;   /* xếp nhiều dòng */
-  gap: 12px;
 }
 
-.form-row {
-  display: flex;            /* label + input cùng hàng */
-  align-items: center;
-  gap: 10px;
-}
-
-.form-row label {
-  width: 120px;             /* cố định chiều rộng label để thẳng hàng */
+.div_form label{
   font-size: 14px;
-}
-
-.form-row input {
-  flex: 1;                  /* input chiếm phần còn lại */
-  padding: 6px 10px;
+  display: block;
+  margin-bottom: 6px;
 }

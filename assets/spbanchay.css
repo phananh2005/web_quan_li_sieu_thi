@@ -1,0 +1,57 @@
+.main{
+  display: block;
+  justify-content: center;  /* căn giữa theo chiều dọc */
+  align-items: center;      /* căn giữa theo chiều ngang */
+  gap: 30px;
+  padding: 15px;
+}
+
+.div_form_timkiem{
+  background: white;
+  padding: 30px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.div_form_timkiem label{
+  font-size: 14px;
+}
+
+.div_table_spbanchay{
+    text-align: center;
+}
+
+table {
+  width: fit-content;
+  border-collapse: collapse;   /* gộp viền */
+  font-family: Arial, sans-serif;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;            /* để bo góc */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  margin: auto;
+}
+
+table th {
+  background: #1e293b;
+  color: white;
+  padding: 12px;
+  font-size: 15px;
+}
+
+table td {
+  padding: 12px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+table tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+table tr:hover {
+  background: #e0f2fe;
+  transition: 0.2s;
+}
