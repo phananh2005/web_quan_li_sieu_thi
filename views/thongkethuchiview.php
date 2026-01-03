@@ -4,6 +4,15 @@
     $role = $_SESSION["chucvu"];
 
     require_once __DIR__."/../models/thongkethuchimodel.php";
+
+    if(isset($_POST["button_form_timkiem"])){
+        if(empty($_POST["form_nam"])){
+            echo "<script>
+                alert('Vui lòng nhập đầy đủ thông tin tìm kiếm!');
+                window.location.href = 'thongkethuchiview.php';
+                </script>";
+        }
+    }
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -93,14 +102,14 @@
         labels: ["T1","T2","T3","T4","T5","T6","T7","T8","T9","T10","T11","T12"],
         datasets: [
         {
-            label: "Doanh thu",
-            data: doanhThu,
+            label: "Doanh thu (triệu VNĐ)",
+            data: doanhThu.map(value => value / 1000000),
             borderWidth: 2,
-            tension: 0.3  // làm đường cong mượt hơn
+            tension: 0.3  // làm đường cong mượt
         },
         {
-            label: "Chi phí nhập",
-            data: chiPhi,
+            label: "Chi phí nhập hàng (triệu VNĐ)",
+            data: chiPhi.map(value => value / 1000000),
             borderWidth: 2,
             tension: 0.3
         }
