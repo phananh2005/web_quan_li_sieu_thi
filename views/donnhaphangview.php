@@ -139,7 +139,7 @@
     
     <main class="main">
         <!-- tìm kiếm -->
-        <div class="div_form">
+        <div class="div_form_timkiem">
             <form method="post" id="form_dnh">
                 <label>Ngày:</label>
                 <input type="text" name="form_ngay">
@@ -162,83 +162,91 @@
         </div>
 
         <!-- chi tiết đơn nhập hàng -->
-        <div class="div_form" style="display: none;" id="div_ctdnh">
+        <div id="modal_ctdnh" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" onclick="an_form_ctdnh()">&times;</span>
+            <div class="div_form" id="div_ctdnh">
+
             <form method="post" id="form_ct">
-                <h3>Chi tiết Đơn Nhập Hàng</h3>
-                <?php
-                    if(isset($_POST['table_madonnhaphang'])) echo "<h3 id = 'h_madonnhaphang'> Mã Đơn Nhập Hàng: ".$_POST['table_madonnhaphang']."</h3>";
-                ?>
-                <table border="1" class = "table_form" id = "tb_ctdnh">
-                    <thead>
-                        <tr>
-                            <th>Tên mặt hàng</th>
-                            <th>Số lượng</th>
-                            <th>Giá Nhập</th>
-                            <th>Thành tiền</th>
-                            <th>Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tb_ctdnh_body">
-                        <?php
-                        if(isset($_POST['table_madonnhaphang'],$_POST['button_table_xemchitiet'])){
-                            getMHToTableDNH("
-                                SELECT 
-                                    mh.tenmathang,
-                                    ctdnh.soluong,
-                                    ctdnh.dongianhap,
-                                    ctdnh.soluong * ctdnh.dongianhap AS thanhtien
-                                FROM chitietdonnhaphang ctdnh
-                                JOIN mathang mh ON mh.mamathang = ctdnh.mamathang
-                                WHERE ctdnh.madonnhaphang = ".$_POST['table_madonnhaphang']
-                            );
-                        }
-                        ?>
-                    </tbody>
-                </table>
-                <div class="form-row">
-                    <label id= "lb_tennhacungcap"><b>Nhà cung cấp:</b></label>
-                        <select name="ct_nhacungcap" id="ip_ctnhacungcap_main">
-                            <option value="">-- Chọn nhà cung cấp --</option>
-                            <?php getNhaCungCapToSelect(); ?>
-                        </select>
-                    <hr>
-                    <label id="lb_tenmathang">Tên mặt hàng:</label>
-                    <input name="ct_tenmathang" type="text" id="ip_cttenmathang" list="ds_mathang" autocomplete="off">
-                    <datalist id="ds_mathang">
-                        <?php getTenMHToList(); ?>
-                    </datalist>
-                    <!-- Chạy tên mặt hàng bằng select option thay vì input -->
-                    <!-- <label id="lb_tenmathang"><b>Tên Mặt Hàng:</b></label>
-                        <select name="ct_tenmathang" id="ip_cttenmathang">
-                            <option value="">-- Chọn nhà cung cấp --</option>
-                             gọi hàm getTenMHToList(); để test
-                        </select> -->
-                    <label id = "lb_dongianhap">Giá Nhập:</label>
-                    <input type="number" name="ct_dongianhap" id="ip_ctdongianhap">
-                    <label id = "lb_soluong">Số lượng:</label>
-                    <input type="text" name="ct_soluong" id="ip_ctsoluong">
-                    <label id="lb_thanhtien">Thành Tiền:</label>
-                    <input type="text" name="ct_thanhtien" id="ip_ctthanhtien" readonly>
-                    <script>
-                        function tinhThanhTien(){
-                            const sl = Number(document.getElementById("ip_ctsoluong").value) || 0;
-                            const dg = Number(document.getElementById("ip_ctdongianhap").value) || 0;
-                            document.getElementById("ip_ctthanhtien").value = sl * dg;
-                        }
+                <div class="modal-header">
+                    <h3>Chi tiết Đơn Nhập Hàng</h3>
+                    <?php
+                        if(isset($_POST['table_madonnhaphang'])) echo "<h3 id = 'h_madonnhaphang'> Mã Đơn Nhập Hàng: ".$_POST['table_madonnhaphang']."</h3>";
+                    ?>
+                    <table border="1" class = "table_form" id = "tb_ctdnh">
+                        <thead>
+                            <tr>
+                                <th>Tên mặt hàng</th>
+                                <th>Số lượng</th>
+                                <th>Giá Nhập</th>
+                                <th>Thành tiền</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tb_ctdnh_body">
+                            <?php
+                            if(isset($_POST['table_madonnhaphang'],$_POST['button_table_xemchitiet'])){
+                                getMHToTableDNH("
+                                    SELECT 
+                                        mh.tenmathang,
+                                        ctdnh.soluong,
+                                        ctdnh.dongianhap,
+                                        ctdnh.soluong * ctdnh.dongianhap AS thanhtien
+                                    FROM chitietdonnhaphang ctdnh
+                                    JOIN mathang mh ON mh.mamathang = ctdnh.mamathang
+                                    WHERE ctdnh.madonnhaphang = ".$_POST['table_madonnhaphang']
+                                );
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                    <div class="form-row">
+                        <label id= "lb_tennhacungcap"><b>Nhà cung cấp:</b></label>
+                            <select name="ct_nhacungcap" id="ip_ctnhacungcap_main">
+                                <option value="">-- Chọn nhà cung cấp --</option>
+                                <?php getNhaCungCapToSelect(); ?>
+                            </select>
+                        <hr>
+                        <label id="lb_tenmathang">Tên mặt hàng:</label>
+                        <input name="ct_tenmathang" type="text" id="ip_cttenmathang" list="ds_mathang" autocomplete="off">
+                        <datalist id="ds_mathang">
+                            <?php getTenMHToList(); ?>
+                        </datalist>
+                        <!-- Chạy tên mặt hàng bằng select option thay vì input -->
+                        <!-- <label id="lb_tenmathang"><b>Tên Mặt Hàng:</b></label>
+                            <select name="ct_tenmathang" id="ip_cttenmathang">
+                                <option value="">-- Chọn nhà cung cấp --</option>
+                                gọi hàm getTenMHToList(); để test
+                            </select> -->
+                        <label id = "lb_dongianhap">Giá Nhập:</label>
+                        <input type="number" name="ct_dongianhap" id="ip_ctdongianhap">
+                        <label id = "lb_soluong">Số lượng:</label>
+                        <input type="text" name="ct_soluong" id="ip_ctsoluong">
+                        <label id="lb_thanhtien">Thành Tiền:</label>
+                        <input type="text" name="ct_thanhtien" id="ip_ctthanhtien" readonly>
+                        <script>
+                            function tinhThanhTien(){
+                                const sl = Number(document.getElementById("ip_ctsoluong").value) || 0;
+                                const dg = Number(document.getElementById("ip_ctdongianhap").value) || 0;
+                                document.getElementById("ip_ctthanhtien").value = sl * dg;
+                            }
 
-                        document.getElementById("ip_ctsoluong").addEventListener("input", tinhThanhTien);
-                        document.getElementById("ip_ctdongianhap").addEventListener("input", tinhThanhTien);
-                    </script>
-
-                </div>
-                <div class="btn-row">
-                    <button type="button" id="btn_them_mh" onclick="them_mh()">Thêm mặt hàng</button>
-                    <button type="submit" name="button_tao_dnh" id="btn_tao_dnh">Tạo Đơn Nhập Hàng</button>
-                    <button type="button" onclick="an_form_ctdnh()">Hủy</button>
+                            document.getElementById("ip_ctsoluong").addEventListener("input", tinhThanhTien);
+                            document.getElementById("ip_ctdongianhap").addEventListener("input", tinhThanhTien);
+                        </script>
+                    </div>
+                    <div class="btn-row">
+                        <button type="button" id="btn_them_mh" onclick="them_mh()">Thêm mặt hàng</button>
+                        <button type="submit" name="button_tao_dnh" id="btn_tao_dnh">Tạo Đơn Nhập Hàng</button>
+                        <button type="button" onclick="an_form_ctdnh()">Hủy</button>
+                    </div>
                 </div>
             </form>
         </div>
 
+        
+        </div> 
+        </div>
         <!-- bảng hóa đơn -->
         <div class = "div_table">
             <table class = "table">
@@ -267,7 +275,7 @@
     }
 
     function hien_form_ctdnh(readonly){
-        document.getElementById("div_ctdnh").style.display = "block";
+        document.getElementById("modal_ctdnh").style.display = "block";
 
         if(readonly){
             // Ẩn các input thêm mới
@@ -319,7 +327,14 @@
 
     function an_form_ctdnh(){
         reset_form_ctdnh();
-        document.getElementById("div_ctdnh").style.display="none";
+        document.getElementById("modal_ctdnh").style.display="none";
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById("modal_ctdnh");
+        if (event.target === modal) {
+            an_form_ctdnh();
+        }
     }
 
     function isInDatalist(inputId, datalistId) {
