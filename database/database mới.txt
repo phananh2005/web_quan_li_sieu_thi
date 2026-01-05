@@ -31,6 +31,7 @@ CREATE TABLE taikhoan(
     matkhau VARCHAR(255) NOT NULL,
     manhanvien VARCHAR(20) UNIQUE,
     chucvu ENUM ('Admin','Bán hàng','Kho') NOT NULL,
+    trangthai ENUM ('Đang hoạt động', 'Ngừng hoạt động') NOT NULL,
     CONSTRAINT chkadminnv
     CHECK (
         (chucvu = 'Admin' AND manhanvien IS NULL)
@@ -192,12 +193,12 @@ VALUES
 ('NV004', 'Phạm Ngọc Dung', '1999-07-08', '0978123456', 'Nữ', 'Huế', 3, 'Đang làm việc'),
 ('NV005', 'Vũ Minh Đức', '1998-12-01', '0966123456', 'Nam', 'Hải Phòng', 2, 'Đã nghỉ việc');
 
-INSERT INTO taikhoan (tentaikhoan, matkhau, manhanvien, chucvu)
+INSERT INTO taikhoan (tentaikhoan, matkhau, manhanvien, chucvu, trangthai)
 VALUES
-('admin', 'admin123', NULL, 'Admin'),
-('banhang1', 'bh123', 'NV001', 'Bán hàng'),
-('banhang2', 'bh456', 'NV003', 'Bán hàng'),
-('kho1', 'kho123', 'NV002', 'Kho');
+('admin', 'admin123', NULL, 'Admin', 'Đang hoạt động'),
+('banhang1', 'bh123', 'NV001', 'Bán hàng', 'Đang hoạt động'),
+('banhang2', 'bh456', 'NV003', 'Bán hàng', 'Đang hoạt động'),
+('kho1', 'kho123', 'NV002', 'Kho', 'Đang hoạt động');
 
 INSERT INTO danhmuc (tendanhmuc, ghichu) VALUES
 ('Laptop', 'Laptop văn phòng, gaming'),

@@ -11,15 +11,6 @@
             </script>";
     }
 
-    if(isset($_POST['button_table_xoa'], $_POST['table_mataikhoan'])){
-        $rows = writeTaiKhoan("Delete FROM taikhoan WHERE mataikhoan = ". $_POST['table_mataikhoan']);
-        if($rows > 0){
-            thongBao("Xóa thành công");
-        }else{
-            thongBao("Xóa thất bại");
-        }
-    }
-
     function createSqlTimKiem(){
         $sql = "Select * from taikhoan where 1=1";
         if(isset($_POST['button_form_timkiem'])){  
@@ -35,17 +26,20 @@
             } 
             if(isset($_POST['form_chucvu'])){
                 $sql .= " and chucvu = '" . $_POST['form_chucvu'] . "'";
-            } 
+            }
+            if(isset($_POST['form_trangthai'])){
+                $sql .= " and trangthai = '" . $_POST['form_trangthai'] . "'";
+            }
         }
         return $sql;
     }
 
-    if(isset($_POST['form_mataikhoan'],$_POST['form_tentaikhoan'],$_POST['form_matkhau']
-        ,$_POST['form_chucvu'],$_POST['button_form_themvasua'])){
+    if(isset($_POST['button_form_themvasua'])){
         $mataikhoan = $_POST['form_mataikhoan'];
         $tentaikhoan = $_POST['form_tentaikhoan'];
         $matkhau = $_POST['form_matkhau'];
         $chucvu = $_POST['form_chucvu'];
+        $trangthai = $_POST['form_trangthai'];
 
         if($chucvu != "Admin"){
             if(isset($_POST['form_manhanvien'])){
@@ -57,12 +51,12 @@
             $manhanvien_sql = "null";
         }
 
-        if($tentaikhoan == "" || $matkhau == "" || $chucvu == "") 
+        if($tentaikhoan == "" || $matkhau == "" || $chucvu == "" || $trangthai == "") 
             thongBao("Phải điền đầy đủ field"); 
 
         if($_POST['button_form_themvasua'] == "btn_them"){
-            $sql = "INSERT INTO taikhoan (tentaikhoan, matkhau, manhanvien, chucvu) values 
-                ('".$tentaikhoan."','".$matkhau."',".$manhanvien_sql.",'".$chucvu."')";
+            $sql = "INSERT INTO taikhoan (tentaikhoan, matkhau, manhanvien, chucvu, trangthai) values 
+                ('".$tentaikhoan."','".$matkhau."',".$manhanvien_sql.",'".$chucvu."','".$trangthai."')";
             $row = writeTaiKhoan($sql);
             if($row>0) thongBao("Thêm thành công");
             else thongBao("Thêm thất bại");
@@ -70,7 +64,7 @@
 
         if($_POST['button_form_themvasua'] == "btn_sua"){
             $sql = "Update taikhoan SET tentaikhoan ='".$tentaikhoan."', matkhau = '".$matkhau."', 
-            manhanvien = ".$manhanvien_sql.", chucvu = '".$chucvu."' where mataikhoan =".$mataikhoan;
+            manhanvien = ".$manhanvien_sql.", chucvu = '".$chucvu."', trangthai = '".$trangthai."' where mataikhoan =".$mataikhoan;
             $row = writeTaiKhoan($sql);
             if($row>0) thongBao("Sửa thành công");
             else thongBao("Sửa thất bại");
@@ -134,6 +128,7 @@
                     <th>Mật khẩu</th>
                     <th>Mã nhân viên</th>
                     <th>Chức vụ</th>
+                    <th>Trạng thái</th>
                     <th>Thao tác</th>
                 </tr>
                 <?php
@@ -162,6 +157,12 @@
                     <option value="Kho">Kho</option>
                     <option value="Bán hàng">Bán hàng</option>    
                 </select>
+                <label>Trạng thái:</label>
+                <select name = 'form_trangthai' id = 'sel_trangthai'>
+                    <option disabled selected>Chọn trạng thái</option>
+                    <option value="Đang hoạt động">Đang hoạt động</option>
+                    <option value="Ngừng hoạt động">Ngừng hoạt động</option>
+                </select>
                 <br>
                 <button type="submit" name='button_form_timkiem' value = "btn_timkiem">Tìm kiếm</button>
                 <button type="submit" name='button_form_themvasua' value = "btn_them">Thêm</button>
@@ -189,25 +190,26 @@
         document.getElementById("form").reset();
     }
 
-    function setValueForm(mataikhoan,tentaikhoan, matkhau, manhanvien, chucvu){
+    function setValueForm(mataikhoan,tentaikhoan, matkhau, manhanvien, chucvu, trangthai){
         document.getElementById("ip_mataikhoan").value=mataikhoan;
         document.getElementById("ip_tentaikhoan").value=tentaikhoan;
         document.getElementById("ip_matkhau").value=matkhau;
         if(chucvu != "Admin") document.getElementById("sel_manhanvien").value=manhanvien;
         else document.getElementById("sel_manhanvien").selectedIndex = 0;
         document.getElementById("sel_chucvu").value=chucvu;
+        document.getElementById("sel_trangthai").value=trangthai;
     }
 </script>
 
 <?php
-    if(isset($_POST['table_mataikhoan'],$_POST['table_tentaikhoan'],$_POST['table_matkhau']
-            ,$_POST['table_manhanvien'],$_POST['table_chucvu'],$_POST['button_table_chon'])){
+    if(isset($_POST['button_table_chon'])){
         $mataikhoan = $_POST['table_mataikhoan'];
         $tentaikhoan = $_POST['table_tentaikhoan'];
         $matkhau = $_POST['table_matkhau'];
         $manhanvien = $_POST['table_manhanvien'];
         $chucvu = $_POST['table_chucvu'];
+        $trangthai = $_POST['table_trangthai'];
         echo "<script> setValueForm('" .$mataikhoan . "','" . $tentaikhoan . "','" . $matkhau . "','" 
-            . $manhanvien . "','" .$chucvu. "')</script>";
+            . $manhanvien . "','" .$chucvu. "','" .$trangthai. "')</script>";
     }
 ?>
